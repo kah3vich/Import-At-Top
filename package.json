@@ -7,7 +7,7 @@
 		"type": "git",
 		"url": "https://github.com/kah3vich/Import-At-Top"
 	},
-	"version": "0.0.16",
+	"version": "0.0.18",
 	"engines": {
 		"vscode": "^1.60.0"
 	},
