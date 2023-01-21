@@ -3,8 +3,11 @@
 	"publisher": "kah3vich",
 	"displayName": "Import At Top",
 	"description": "...",
-	"repository": "https://github.com/kah3vich/Import-At-Top",
-	"version": "0.0.15",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/kah3vich/Import-At-Top"
+	},
+	"version": "0.0.16",
 	"engines": {
 		"vscode": "^1.60.0"
 	},
@@ -32,6 +35,25 @@
 			}
 		]
 	},
+	"icon": "assets/logo.jpg",
+	"license": "GPL-3.0-only",
+	"author": {
+		"email": "test@gmail.com",
+		"name": "Nik Bild",
+		"url": "https://github.com/kah3vich"
+	},
+	"keywords": [
+		"import",
+		"import top",
+		"import at top",
+		"import-top",
+		"import-at-top",
+		"auto-import",
+		"import-auto",
+		"import auto",
+		"auto import"
+	],
+	"homepage": "",
 	"scripts": {
 		"build": "vsce package",
 		"vscode:prepublish": "npm run compile",
