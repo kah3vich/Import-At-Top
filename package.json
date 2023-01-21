@@ -3,8 +3,8 @@
 	"publisher": "kah3vich",
 	"displayName": "Import At Top",
 	"description": "...",
-	"repository": "...",
-	"version": "0.0.14",
+	"repository": "https://github.com/kah3vich/Import-At-Top",
+	"version": "0.0.15",
 	"engines": {
 		"vscode": "^1.60.0"
 	},
