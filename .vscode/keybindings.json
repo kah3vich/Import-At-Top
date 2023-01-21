@@ -1,6 +1,6 @@
 [
 	{
-		"key": "tab i",
+		"key": "shift+i",
 		"command": "import-at-top"
 	}
 ]
