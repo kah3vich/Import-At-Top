@@ -35,7 +35,7 @@
 			}
 		]
 	},
-	"icon": "assets/logo.jpg",
+	"icon": "assets/logo.png",
 	"license": "GPL-3.0-only",
 	"author": {
 		"email": "test@gmail.com",
