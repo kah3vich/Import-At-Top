@@ -13,15 +13,23 @@
 	"import-at-top.config": [
 		{
 			"trigger": "useState",
-			"packeg": "react"
+			"packet": "react",
+			"defaultType": false
 		},
 		{
 			"trigger": "useMemo",
-			"packeg": "react"
+			"packet": "react",
+			"defaultType": false
 		},
 		{
 			"trigger": "useCallback",
-			"packeg": "react"
+			"packet": "react",
+			"defaultType": false
+		},
+		{
+			"trigger": "useSelection",
+			"packet": "redux",
+			"defaultType": true
 		}
 	]
 }

@@ -1,32 +1,59 @@
 import * as vscode from 'vscode';
 
-const importTop = (text: any, arr: any) => {
+type ConfigItem = {
+	trigger: string;
+	packet: string;
+	defaultType: boolean;
+};
+
+const handlerDefaultType = (type: boolean, direction: 'left' | 'right') => {
+	if (!type) {
+		if (direction === 'left') {
+			return '{ ';
+		}
+		return ' }';
+	}
+
+	return '';
+};
+
+const importTop = (text: string, arr: ConfigItem[]) => {
 	let result = text;
 
-	const insertAt = (str: any, sub: any, pos: any) =>
-		`${str.slice(0, pos)}, ${sub}${str.slice(pos)}`;
+	// const insertAt = (str: string, sub: string, pos: number) =>
+	// 	`${str.slice(0, pos)}, ${sub}${str.slice(pos)}`;
 
 	if (arr.length) {
-		arr.map((el: any) => {
+		arr.forEach(el => {
 			if (result.search(el.trigger) > 0) {
-				if (result.search(` } from '${el.packeg}'`) > 0) {
-					result = insertAt(result, el.trigger, result.search(` } from '${el.packeg}'`));
-				} else {
-					result = `import { ${el.trigger} } from '${el.packeg}'\n` + result;
-				}
+				// if (
+				// 	result.search(`${handlerDefaultType(el.defaultType, 'right')} from '${el.packet}'`) > 0
+				// ) {
+				// 	result = insertAt(
+				// 		result,
+				// 		el.trigger,
+				// 		result.search(`${handlerDefaultType(el.defaultType, 'right')} from '${el.packet}'`),
+				// 	);
+				// } else {
+				result =
+					`import ${handlerDefaultType(el.defaultType, 'left')}${el.trigger}${handlerDefaultType(
+						el.defaultType,
+						'right',
+					)} from '${el.packet}'\n` + result;
+				// }
 			}
 
 			result = [...new Set(result.split(`${el.trigger}, `))].join('');
 		});
 		vscode.window.showInformationMessage('Import At Top - ✅');
 	} else {
-		vscode.window.showInformationMessage('*Import At Top* - ❌ \n Config empty');
+		vscode.window.showInformationMessage('Import At Top - ❌');
 	}
 
 	return result;
 };
 
-export function activate(context: vscode.ExtensionContext) {
+export const activate = (context: vscode.ExtensionContext) => {
 	const disposable = vscode.commands.registerCommand('import-at-top', async () => {
 		const editor = vscode.window.activeTextEditor;
 		if (!editor) {
@@ -36,7 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		const greeting = vscode.workspace.getConfiguration('import-at-top').get('config');
 
-		const newText = importTop(oldText, greeting);
+		const newText = importTop(oldText, greeting as ConfigItem[]);
 
 		editor.edit(editBuilder => {
 			editBuilder.replace(new vscode.Range(0, 0, editor.document.lineCount, 0), newText);
@@ -44,6 +71,6 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(disposable);
-}
+};
 
-export function deactivate() {}
+export const deactivate = () => {};

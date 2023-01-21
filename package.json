@@ -14,6 +14,11 @@
 	"categories": [
 		"Other"
 	],
+	"preview": false,
+	"galleryBanner": {
+		"color": "#41205f",
+		"theme": "dark"
+	},
 	"activationEvents": [
 		"onCommand:import-at-top"
 	],
@@ -24,7 +29,14 @@
 			"properties": {
 				"import-at-top.config": {
 					"type": "array",
-					"default": []
+					"description": ".",
+					"default": [
+						{
+							"trigger": "useState",
+							"packet": "react",
+							"defaultType": false
+						}
+					]
 				}
 			}
 		},
@@ -32,6 +44,14 @@
 			{
 				"command": "import-at-top",
 				"title": "Import At Top"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "import-at-top",
+				"key": "shift+i",
+				"when": "editorTextFocus",
+				"mac": "shift+i"
 			}
 		]
 	},
@@ -41,6 +61,10 @@
 		"email": "test@gmail.com",
 		"name": "Nik Bild",
 		"url": "https://github.com/kah3vich"
+	},
+	"bugs": {
+		"url": "https://github.com/kah3vich/Import-At-Top/issues",
+		"email": "test@gmail.com"
 	},
 	"keywords": [
 		"import",
