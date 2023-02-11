@@ -7,7 +7,7 @@
 		"type": "git",
 		"url": "https://github.com/kah3vich/Import-At-Top"
 	},
-	"version": "0.0.19",
+	"version": "0.0.21",
 	"engines": {
 		"vscode": "^1.60.0"
 	},
@@ -16,12 +16,9 @@
 	],
 	"preview": false,
 	"galleryBanner": {
-		"color": "#41205f",
-		"theme": "dark"
+		"color": "#ffffff",
+		"theme": "light"
 	},
-	"activationEvents": [
-		"onCommand:import-at-top"
-	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"configuration": {
@@ -55,6 +52,9 @@
 			}
 		]
 	},
+	"activationEvents": [
+		"onCommand:import-at-top"
+	],
 	"icon": "assets/logo.png",
 	"license": "GPL-3.0-only",
 	"author": {
@@ -88,16 +88,21 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.60.0",
 		"@types/glob": "^7.1.3",
 		"@types/mocha": "^8.2.2",
 		"@types/node": "14.x",
-		"eslint": "^7.27.0",
+		"@types/vscode": "^1.60.0",
 		"@typescript-eslint/eslint-plugin": "^4.26.0",
 		"@typescript-eslint/parser": "^4.26.0",
 		"glob": "^7.1.7",
 		"mocha": "^8.4.0",
 		"typescript": "^4.3.2",
 		"vscode-test": "^1.5.2"
+	},
+	"dependencies": {
+		"@types/eslint": "^8.21.0",
+		"@types/prettier": "^2.7.2",
+		"eslint": "^7.32.0",
+		"prettier": "^2.8.4"
 	}
 }
