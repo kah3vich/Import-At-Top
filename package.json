@@ -2,36 +2,41 @@
 	"name": "import-at-top",
 	"publisher": "kah3vich",
 	"displayName": "Import At Top",
-	"description": "...",
+	"description": "An extension that adds imports to the source file from the specified options in the configuration file, and also sorts and removes unnecessary imports, which improves and speeds up the user experience.",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/kah3vich/Import-At-Top"
 	},
-	"version": "0.0.21",
+	"version": "0.0.23",
 	"engines": {
 		"vscode": "^1.60.0"
 	},
 	"categories": [
 		"Other"
 	],
-	"preview": false,
+	"preview": true,
 	"galleryBanner": {
 		"color": "#ffffff",
 		"theme": "light"
 	},
 	"main": "./out/extension.js",
+	"browser": "./out/extension.js",
 	"contributes": {
 		"configuration": {
 			"title": "Import At Top",
 			"properties": {
 				"import-at-top.config": {
 					"type": "array",
-					"description": ".",
+					"description": "Config params - Import At Top",
 					"default": [
 						{
-							"trigger": "useState",
-							"packet": "react",
-							"defaultType": false
+							"triggerDefault": [
+								"React"
+							],
+							"triggerExport": [
+								"useState"
+							],
+							"package": "react"
 						}
 					]
 				}
@@ -58,26 +63,27 @@
 	"icon": "assets/logo.png",
 	"license": "GPL-3.0-only",
 	"author": {
-		"email": "test@gmail.com",
-		"name": "Nik Bild",
+		"name": "kah3vich",
 		"url": "https://github.com/kah3vich"
 	},
 	"bugs": {
-		"url": "https://github.com/kah3vich/Import-At-Top/issues",
-		"email": "test@gmail.com"
+		"url": "https://github.com/kah3vich/Import-At-Top/issues"
 	},
 	"keywords": [
 		"import",
-		"import top",
-		"import at top",
-		"import-top",
-		"import-at-top",
-		"auto-import",
-		"import-auto",
-		"import auto",
-		"auto import"
+		"react",
+		"typescript",
+		"formatted",
+		"formatting",
+		"format",
+		"sort",
+		"javascript",
+		"linter",
+		"other",
+		"top",
+		"auto"
 	],
-	"homepage": "",
+	"homepage": "https://github.com/kah3vich/Import-At-Top/readme.md",
 	"scripts": {
 		"build": "vsce package",
 		"vscode:prepublish": "npm run compile",
