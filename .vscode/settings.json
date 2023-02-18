@@ -5,31 +5,5 @@
 	},
 	"search.exclude": {
 		"out": true // set this to false to include "out" folder in search results
-	},
-	// Turn off tsc task auto detection since we have the necessary tasks as npm scripts
-	"typescript.tsc.autoDetect": "off",
-
-	// beta
-	"import-at-top.config": [
-		{
-			"trigger": "useState",
-			"packet": "react",
-			"defaultType": false
-		},
-		{
-			"trigger": "useMemo",
-			"packet": "react",
-			"defaultType": false
-		},
-		{
-			"trigger": "useCallback",
-			"packet": "react",
-			"defaultType": false
-		},
-		{
-			"trigger": "useSelection",
-			"packet": "redux",
-			"defaultType": true
-		}
-	]
+	}
 }

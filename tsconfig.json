@@ -1,12 +1,21 @@
 {
 	"compilerOptions": {
-		"module": "commonjs",
 		"target": "es6",
-		"outDir": "out",
-		"lib": ["es6"],
-		"sourceMap": true,
-		"rootDir": "src",
-		"strict": true
+		"types": ["node", "jest"],
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"baseUrl": ".",
+		"noFallthroughCasesInSwitch": true,
+		"outDir": "out"
 	},
+	"compileOnSave": true,
+	"include": ["."],
 	"exclude": ["node_modules", ".vscode-test"]
 }

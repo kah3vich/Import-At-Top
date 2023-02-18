@@ -1,7 +1,4 @@
-*.vsix
-/out
-
-package-lock.json
+out
 node_modules
-
-_.js
+*.vsix
+package-lock.json

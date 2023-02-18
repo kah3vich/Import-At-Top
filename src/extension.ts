@@ -1,3 +1,4 @@
+import { consoleLog } from 'src/console';
 import * as vscode from 'vscode';
 import * as prettier from 'prettier';
 import * as eslint from 'eslint';
@@ -421,7 +422,7 @@ export const activate = (context: vscode.ExtensionContext) => {
 		const document = editor.document;
 		const documentText = document.getText();
 		console.log('documentText    ', documentText);
-
+		consoleLog('Nano Snippets');
 		const result = documentText;
 
 		// const formattedText = prettier.format(documentText, {
@@ -443,3 +444,4 @@ export const activate = (context: vscode.ExtensionContext) => {
 };
 
 export const deactivate = () => {};
+export { consoleLog };
