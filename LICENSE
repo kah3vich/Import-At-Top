@@ -1,14 +1,15 @@
-MIT License
-(C) [2023] [kah3vich]
+Import At Top License
 
-The permission granted by this license allows users to use and copy the software, as long as the following conditions are met:
+Copyright (C) 2021, Kah3vich (https://github.com/kah3vich) All rights reserved.
 
-Conditions
-The above copyright notice and this license notice must be included in all copies of the software and its documentation.
+This file is part of the "Import At Top" project.
 
-The software is for educational and non-commercial use only, and may not be sold or used in any way to generate commercial profits.
+DEFINITIONS a) "Licensor" is Kah3vich (https://github.com/kah3vich). b) "Software" is the software known as Import At Top.
 
-Unless required by applicable law or agreed to in writing, the software is provided "as is," without warranties of any kind, either express or implied, including but not limited to the implied warranties of merchantability and fitness for a particular purpose. The author or copyright holder will not be liable for any claims, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software.
+RESTRICTIONS You are NOT permitted to: a) Edit, alter, modify, adapt, translate or otherwise change the whole or any part of the Software without the express permission of the Licensor. b) Decompile, disassemble or reverse engineer the Software or attempt to do any such things. c) Reproduce, copy, distribute, resell or otherwise use the whole or any part of the Software for any commercial or non-commercial purpose. d) Disable, modify or hide notifications sent by the Software.
 
-Author
-The author of this project is [kah3vich].
+OWNERSHIP The Software, copyright, and other intellectual property rights of whatever nature in the Software, including any modifications made thereto are and shall remain the property of the Licensor.
+
+WARRANTY DISCLAIMER THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+
+LIMITATION OF LIABILITY IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
