@@ -1,21 +1,19 @@
 import * as prettier from 'prettier';
 import * as eslint from 'eslint';
+import type { TConfigApp, TFormattedCodeLinter, TFormatterApp } from './types';
+import { baseConfig, baseFormatter } from './constant';
 
-export const ImportAtTop = (text: string) => {
+export const ImportAtTop = (
+	text: string,
+	configExtension: TConfigApp[],
+	formatterExtension: TFormatterApp,
+) => {
 	//| variable
 
-	const configApp = [
-		{
-			triggerDefault: ['React'],
-			triggerExport: ['useState', 'useId', 'useRef'],
-			package: 'react',
-		},
-		{
-			triggerDefault: ['Store'],
-			triggerExport: ['useControl'],
-			package: 'redux',
-		},
-	];
+	const configApp: TConfigApp[] =
+		JSON.parse(JSON.stringify(configExtension)) || JSON.parse(JSON.stringify(baseConfig));
+
+	const formatterApp = formatterExtension || baseFormatter;
 	const configDataFile = [];
 	let codeTextImport = ``;
 	let codeTextMain = ``;
@@ -30,17 +28,70 @@ export const ImportAtTop = (text: string) => {
 		return str.replace(/\n/g, '');
 	};
 
-	const formattedCodeLinter = (code: string) => {
-		// Use prettier
+	const formattingMainCode = (code: string) => {
+		const arrWord = ['import', 'from'];
+		let id: number = 0;
+		let result = '';
+		const codeArr = code.split('\n');
+
+		codeArr.forEach((el, i) => {
+			arrWord.forEach(word => {
+				if (el.includes(word)) {
+					id = i;
+				}
+			});
+		});
+
+		result = codeArr.slice(id + 1).join('\n');
+
+		return result;
+	};
+
+	const formattedCodeLinter = ({ code, type = 'finally' }: TFormattedCodeLinter) => {
+		if (type === 'develop') {
+			// Use prettier - Develop
+			const formattedCode = prettier.format(code, {
+				semi: true,
+				singleQuote: true,
+				trailingComma: 'es5',
+				arrowParens: 'always',
+				parser: 'babel',
+			});
+
+			// Use eslint - Develop
+			const linter = new eslint.Linter();
+			const lintingErrors = linter.verifyAndFix(formattedCode, {
+				parserOptions: {
+					ecmaVersion: 6,
+					sourceType: 'module',
+					ecmaFeatures: {
+						jsx: true,
+					},
+				},
+				rules: {
+					'no-unused-vars': 2,
+				},
+			});
+
+			return lintingErrors.output;
+		}
+
+		// Use prettier - Finally
 		const formattedCode = prettier.format(code, {
-			semi: true,
-			singleQuote: true,
+			semi: formatterApp.semi,
+			printWidth: formatterApp.printWidth,
+			tabWidth: formatterApp.tabWidth,
+			useTabs: formatterApp.useTabs,
+			bracketSpacing: formatterApp.bracketSpacing,
+			bracketSameLine: formatterApp.bracketSameLine,
+			jsxBracketSameLine: formatterApp.jsxBracketSameLine,
+			singleQuote: formatterApp.singleQuote,
 			trailingComma: 'es5',
 			arrowParens: 'always',
 			parser: 'babel',
 		});
 
-		// Use eslint
+		// Use eslint - Finally
 		const linter = new eslint.Linter();
 		const lintingErrors = linter.verifyAndFix(formattedCode, {
 			parserOptions: {
@@ -73,7 +124,7 @@ export const ImportAtTop = (text: string) => {
 		const firstQuoteIndex = lastPart.indexOf("'");
 		const secondQuoteIndex = lastPart.indexOf("'", firstQuoteIndex + 1);
 		lastPart = lastPart.substring(0, secondQuoteIndex + 1);
-		return removeNewLines(formattedCodeLinter(str.split(lastPart).pop() as string));
+		return removeNewLines(formattedCodeLinter({ code: str.split(lastPart).pop() as string }));
 	};
 
 	const flattenArray = (arr: any[]) => {
@@ -219,27 +270,25 @@ export const ImportAtTop = (text: string) => {
 		});
 	};
 
-	const joinArraysByPackage = (configApp: any, packageResult: any) => {
+	const joinArraysByPackage = (config: any, packageResult: any) => {
 		const result: any[] = [];
 
-		configApp.forEach((config: any) => {
+		config.forEach((conf: any) => {
 			const matchingResult = packageResult.find(
-				(packageData: any) => packageData.package === config.package,
+				(packageData: any) => packageData.package === conf.package,
 			);
 			if (matchingResult) {
 				result.push({
-					triggerDefault: [
-						...new Set([...config.triggerDefault, ...matchingResult.triggerDefault]),
-					],
-					triggerExport: [...new Set([...config.triggerExport, ...matchingResult.triggerExport])],
-					package: config.package,
+					triggerDefault: [...new Set([...conf.triggerDefault, ...matchingResult.triggerDefault])],
+					triggerExport: [...new Set([...conf.triggerExport, ...matchingResult.triggerExport])],
+					package: conf.package,
 				});
 				packageResult.splice(packageResult.indexOf(matchingResult), 1);
 			} else {
 				result.push({
-					triggerDefault: [...new Set(config.triggerDefault)],
-					triggerExport: [...new Set(config.triggerExport)],
-					package: config.package,
+					triggerDefault: [...new Set(conf.triggerDefault)],
+					triggerExport: [...new Set(conf.triggerExport)],
+					package: conf.package,
 				});
 			}
 		});
@@ -276,7 +325,7 @@ export const ImportAtTop = (text: string) => {
 	//| result
 
 	//! Formatted code
-	const formattedCodeText = removeNewLines(formattedCodeLinter(text));
+	const formattedCodeText = removeNewLines(formattedCodeLinter({ code: text }));
 
 	//! Get code imports text
 	codeTextImport = getCodeImportText(formattedCodeText);
@@ -292,6 +341,7 @@ export const ImportAtTop = (text: string) => {
 
 	//! Result Local Config
 	stringCodeToObject(gettingOnlyStringImports(codeTextImport), configDataFile);
+
 	configApp.forEach(el => {
 		el.triggerExport = removeUnusedArray(codeTextMain, el.triggerExport);
 		el.triggerDefault = removeUnusedArray(codeTextMain, el.triggerDefault);
@@ -308,5 +358,5 @@ export const ImportAtTop = (text: string) => {
 	//! Result
 	const result = convertCode(configDataFile);
 
-	return `${result}\n\n${formattedCodeLinter(codeTextMain).replace(/ {2,}|{' '}/g, ' ')}`;
+	return `${result}\n\n${formattedCodeLinter({ code: formattingMainCode(text), type: 'finally' })}`;
 };

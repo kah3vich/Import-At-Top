@@ -7,14 +7,17 @@
 		"type": "git",
 		"url": "https://github.com/kah3vich/Import-At-Top"
 	},
-	"version": "0.0.24",
+	"version": "0.0.25",
 	"engines": {
 		"vscode": "^1.60.0"
 	},
 	"categories": [
-		"Other"
+		"Other",
+		"Formatters",
+		"Linters",
+		"Debuggers"
 	],
-	"preview": true,
+	"preview": false,
 	"galleryBanner": {
 		"color": "#ffffff",
 		"theme": "light"
@@ -25,6 +28,20 @@
 		"configuration": {
 			"title": "Import At Top",
 			"properties": {
+				"import-at-top.formatter": {
+					"type": "object",
+					"description": "Formatter params - Import At Top",
+					"default": {
+						"printWidth": 120,
+						"tabWidth": 4,
+						"useTabs": true,
+						"semi": true,
+						"bracketSpacing": true,
+						"bracketSameLine": false,
+						"jsxBracketSameLine": false,
+						"singleQuote": true
+					}
+				},
 				"import-at-top.config": {
 					"type": "array",
 					"description": "Config params - Import At Top",
@@ -34,9 +51,18 @@
 								"React"
 							],
 							"triggerExport": [
-								"useState"
+								"useState",
+								"useId",
+								"useRef"
 							],
 							"package": "react"
+						},
+						{
+							"triggerDefault": [],
+							"triggerExport": [
+								"createStore"
+							],
+							"package": "redux"
 						}
 					]
 				}
@@ -51,9 +77,9 @@
 		"keybindings": [
 			{
 				"command": "import-at-top",
-				"key": "shift+i",
+				"key": "tab+q",
 				"when": "editorTextFocus",
-				"mac": "shift+i"
+				"mac": "tab+q"
 			}
 		]
 	},

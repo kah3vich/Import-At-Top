@@ -16,12 +16,16 @@ export const activate = (context: vscode.ExtensionContext) => {
 
 		const document = editor.document;
 		const documentText = document.getText();
-		const configExtension = vscode.workspace.getConfiguration('import-at-top').get('config');
+		const configExtension: any = vscode.workspace.getConfiguration('import-at-top').get('config');
+
+		console.log('configExtension !!!    ', configExtension);
+
+		const formatterExtension: any = vscode.workspace
+			.getConfiguration('import-at-top')
+			.get('formatter');
 
 		try {
-			const result = ImportAtTop(documentText);
-			console.log('result    ', result);
-			console.log('configExtension    ', configExtension);
+			const result = ImportAtTop(documentText, configExtension, formatterExtension);
 
 			vscode.window.showInformationMessage('✅ - Import At Top');
 			editor.edit(editBuilder => {
