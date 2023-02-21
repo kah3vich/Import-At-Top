@@ -115,6 +115,10 @@
     "vscode:prepublish": "tsc -p ./",
     "watcher": "tsc -watch -p ./",
     "test": "jest --config ./jest.config.js",
+    "lint:script": "npx eslint \"src/js/**/*.js\"",
+    "lint:script-fix": "npx eslint \"src/js/**/*.js\" --fix",
+    "prettier:check": "npx prettier --check .",
+    "prettier:write": "npx prettier --write .",
     "precommit": "lint-staged"
   },
   "devDependencies": {
