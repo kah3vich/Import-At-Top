@@ -18,5 +18,4 @@ export type TFormatterApp = {
 export type TFormattedCodeLinter = {
 	code: string;
 	type?: 'develop' | 'finally';
-	config: TFormatterApp;
 };

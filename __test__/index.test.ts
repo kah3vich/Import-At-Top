@@ -1,5 +1,5 @@
-import { consoleLog } from '../src/utils/other';
+import { consoleLog } from '../src/utils/console';
 
 test('Console log works', () => {
-	expect(consoleLog('Nano Snippets')).toBe('Nano Snippets');
+  expect(consoleLog('Nano Snippets')).toBe('Nano Snippets');
 });
