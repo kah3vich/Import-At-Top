@@ -36,7 +36,7 @@
 <br/>
 
 ```bash
-Tab + Q - import-at-top (command)
+Ctrl + Alt + I - import-at-top (Command + Option + I)
 ```
 
 <br/>
