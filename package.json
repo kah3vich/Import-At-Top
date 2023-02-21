@@ -7,7 +7,7 @@
     "type": "git",
     "url": "https://github.com/kah3vich/Import-At-Top"
   },
-  "version": "0.0.28",
+  "version": "0.0.29",
   "engines": {
     "vscode": "^1.60.0"
   },
@@ -77,9 +77,9 @@
     "keybindings": [
       {
         "command": "import-at-top",
-        "key": "tab+q",
+        "key": "ctrl+alt+a",
         "when": "editorTextFocus",
-        "mac": "tab+q"
+        "mac": "command+option+a"
       }
     ]
   },
