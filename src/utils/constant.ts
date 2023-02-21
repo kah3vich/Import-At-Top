@@ -23,3 +23,14 @@ export const baseFormatter: TFormatterApp = {
 	jsxBracketSameLine: false,
 	singleQuote: true,
 };
+
+/*
+
+Переменная ( массив ) для хранение алфавита в верхнем и нижнем регистре.
+
+*/
+
+export const arrayOfLetters: string[] = [
+	...'abcdefghijklmnopqrstuvwxyz'.toLocaleLowerCase().split(''),
+	...'abcdefghijklmnopqrstuvwxyz'.toLocaleUpperCase().split(''),
+];
