@@ -2,50 +2,95 @@ import * as prettier from 'prettier';
 import * as eslint from 'eslint';
 import type { TConfigApp, TFormattedCodeLinter, TFormatterApp } from './types';
 import { baseConfig, baseFormatter } from './constant';
+import {
+	getArrayImportPackages,
+	baseSchemaArrayConfigLocal,
+	stringCodeToObject,
+	gettingOnlyStringImports,
+	removeUnusedArray,
+	joinArraysByPackage,
+} from './array';
+import { copyArray, removeNewLines } from './other';
+import { getCodeImportText, getCodeMainText, convertCode, formattingMainCode } from './text';
+
+/* 
+
+* 💡 ru: Основная функцию для выполнение - Авто импорта
+
+* 💡 en: 
+
+*/
 
 export const ImportAtTop = (
 	text: string,
 	configExtension: TConfigApp[],
 	formatterExtension: TFormatterApp,
 ) => {
-	//| variable
+	//| ✅ Variable
 
-	const configApp: TConfigApp[] =
-		JSON.parse(JSON.stringify(configExtension)) || JSON.parse(JSON.stringify(baseConfig));
+	/* 
+
+	* 💡 ru: Переменная для хранения конфигураций импортов - пользовательские конфигурации или базовый конфигурация расширения:
+	* configExtension - пользовательские конфигурации.
+	* baseConfig - базовый конфигурация расширения.
+
+	* 💡 en: 
+
+	*/
+
+	const configApp: TConfigApp[] = copyArray(configExtension) || copyArray(baseConfig);
+
+	/* 
+
+	* 💡 ru: Переменная для хранения параметров финального форматирование импортов - пользовательские параметры или базовый параметры расширения:
+	* formatterExtension - пользовательские параметры.
+	* baseFormatter - базовый параметры расширения.
+
+	* 💡 en: 
+
+	*/
 
 	const formatterApp = formatterExtension || baseFormatter;
+
+	/* 
+
+	* 💡 ru: 
+
+	* 💡 en: 
+
+	*/
+
 	const configDataFile = [];
+
+	/* 
+
+	* 💡 ru: 
+
+	* 💡 en: 
+
+	*/
+
 	let codeTextImport = ``;
+
+	/* 
+
+	* 💡 ru: 
+
+	* 💡 en: 
+
+	*/
+
 	let codeTextMain = ``;
-	const arrayOfLetters = [
-		...'abcdefghijklmnopqrstuvwxyz'.toLocaleLowerCase().split(''),
-		...'abcdefghijklmnopqrstuvwxyz'.toLocaleUpperCase().split(''),
-	];
 
-	//| function
+	//| ✅ Formatted
 
-	const removeNewLines = (str: string) => {
-		return str.replace(/\n/g, '');
-	};
+	/* 
 
-	const formattingMainCode = (code: string) => {
-		const arrWord = ['import', 'from'];
-		let id: number = 0;
-		let result = '';
-		const codeArr = code.split('\n');
+	* 💡 ru: 
 
-		codeArr.forEach((el, i) => {
-			arrWord.forEach(word => {
-				if (el.includes(word)) {
-					id = i;
-				}
-			});
-		});
+	* 💡 en: 
 
-		result = codeArr.slice(id + 1).join('\n');
-
-		return result;
-	};
+	*/
 
 	const formattedCodeLinter = ({ code, type = 'finally' }: TFormattedCodeLinter) => {
 		if (type === 'develop') {
@@ -109,254 +154,131 @@ export const ImportAtTop = (
 		return lintingErrors.output;
 	};
 
-	const getCodeImportText = (str: string) => {
-		const fromIndex = str.lastIndexOf('import');
-		let lastPart = str.substring(fromIndex);
-		const firstQuoteIndex = lastPart.indexOf("'");
-		const secondQuoteIndex = lastPart.indexOf("'", firstQuoteIndex + 1);
-		lastPart = lastPart.substring(0, secondQuoteIndex + 1);
-		return str.slice(0, fromIndex) + lastPart;
-	};
+	//| ✅ Main Process
 
-	const getCodeMainText = (str: string) => {
-		const fromIndex = str.lastIndexOf('import');
-		let lastPart = str.substring(fromIndex);
-		const firstQuoteIndex = lastPart.indexOf("'");
-		const secondQuoteIndex = lastPart.indexOf("'", firstQuoteIndex + 1);
-		lastPart = lastPart.substring(0, secondQuoteIndex + 1);
-		return removeNewLines(formattedCodeLinter({ code: str.split(lastPart).pop() as string }));
-	};
+	/* 
 
-	const flattenArray = (arr: any[]) => {
-		return arr.reduce((acc, val) => {
-			if (val !== null) {
-				acc.push(val[0]);
-			}
-			return acc;
-		}, []);
-	};
+	* 💡 ru: 
 
-	const cleaningUpExtraQuotes = (arr: any[]) => {
-		const packages: any[] = [];
+	* 💡 en: 
 
-		arr.forEach(el => {
-			packages.push(el.match(/'[^']*'|"[^"]*"/g));
-		});
-
-		return [...new Set(packages)];
-	};
-
-	const gettingOnlyStringImports = (arr: any) => {
-		const result: any[] = [];
-		[
-			...new Set(
-				arr
-					.replace(/import/g, ';import')
-					.split(';')
-					.map((el: string) => el.replace(/^\s+|\s+$/g, '')),
-			),
-		]
-			.filter(el => el !== '')
-			.forEach((el: any) => {
-				if (el.startsWith('import')) {
-					result.push(el);
-				}
-			});
-
-		return result;
-	};
-
-	const getArrayImportPackages = (importsCode: any) => {
-		const arrImportsString = gettingOnlyStringImports(importsCode);
-
-		return flattenArray(cleaningUpExtraQuotes(arrImportsString)).map((el: any) =>
-			el.replace(/['"]+/g, ''),
-		);
-	};
-
-	const baseSchemaArrayConfigLocal = (arr: any[]) => {
-		const result: any[] = [];
-		const _arr = [...new Set(arr)].forEach(el => {
-			result.push({
-				triggerDefault: [],
-				triggerExport: [],
-				package: el,
-			});
-		});
-
-		return result;
-	};
-
-	const stringCodeToObject = (arrImport: any[], arrPackages: any[]) => {
-		arrImport.forEach(imp => {
-			arrPackages.forEach(el => {
-				if (imp.match(/'(.*?)'/)[1] === el.package) {
-					let exportsArr: any[] = [];
-					let defaultsArr: any[] = [];
-					let checkWord: boolean = true;
-					let checkDefault: boolean = true;
-					let wordTrigger: any[] = [];
-
-					imp
-						.split('')
-						.splice(6)
-						.forEach((el: any) => {
-							if (el === '{') {
-								checkDefault = false;
-							}
-							if (el === '}') {
-								if (wordTrigger.length) {
-									if (checkDefault) {
-										defaultsArr.push(wordTrigger.join(''));
-									} else {
-										exportsArr.push(wordTrigger.join(''));
-									}
-								}
-								wordTrigger = [];
-								checkWord = false;
-								checkDefault = true;
-							}
-
-							if (wordTrigger.join('') == 'type') {
-								wordTrigger = [];
-								checkWord = false;
-							}
-
-							if (wordTrigger.join('') == 'from') {
-								wordTrigger = [];
-								checkWord = false;
-							}
-							if (el === ' ' || el === ',') {
-								if (wordTrigger.length) {
-									if (checkDefault) {
-										defaultsArr.push(wordTrigger.join(''));
-									} else {
-										exportsArr.push(wordTrigger.join(''));
-									}
-								}
-								wordTrigger = [];
-								checkWord = false;
-							}
-							arrayOfLetters.forEach(word => {
-								if (el === word) {
-									wordTrigger.push(el);
-									checkWord = true;
-								}
-							});
-						});
-
-					el.triggerDefault = [...new Set([...el.triggerDefault, ...defaultsArr])];
-					el.triggerExport = [...new Set([...el.triggerExport, ...exportsArr])];
-				}
-			});
-		});
-	};
-
-	const removeUnusedArray = (text: any, triggerArr: any[]) => {
-		return triggerArr && triggerArr.length
-			? triggerArr.filter(word => text.includes(word))
-			: triggerArr;
-	};
-
-	const sortArrayByField = (array: any[], field: string) => {
-		return array.sort(function (a, b) {
-			if (a[field] < b[field]) {
-				return 0;
-			}
-			if (a[field] > b[field]) {
-				return 1;
-			}
-			return -1;
-		});
-	};
-
-	const joinArraysByPackage = (config: any, packageResult: any) => {
-		const result: any[] = [];
-
-		config.forEach((conf: any) => {
-			const matchingResult = packageResult.find(
-				(packageData: any) => packageData.package === conf.package,
-			);
-			if (matchingResult) {
-				result.push({
-					triggerDefault: [...new Set([...conf.triggerDefault, ...matchingResult.triggerDefault])],
-					triggerExport: [...new Set([...conf.triggerExport, ...matchingResult.triggerExport])],
-					package: conf.package,
-				});
-				packageResult.splice(packageResult.indexOf(matchingResult), 1);
-			} else {
-				result.push({
-					triggerDefault: [...new Set(conf.triggerDefault)],
-					triggerExport: [...new Set(conf.triggerExport)],
-					package: conf.package,
-				});
-			}
-		});
-
-		return result;
-	};
-
-	const convertCode = (arr: any[]) => {
-		const str: any[] = [];
-		const sortedArray = sortArrayByField(arr, 'package');
-
-		sortedArray.forEach(el => {
-			const arrDefault = el.triggerDefault.length
-				? `${
-						el.triggerDefault.length > 2
-							? `${el.triggerDefault.join(', ')}`
-							: el.triggerExport.length
-							? `${el.triggerDefault[0]},`
-							: el.triggerDefault[0]
-				  } `
-				: '';
-			const arrExport = el.triggerExport.length ? `{ ${el.triggerExport.join(', ')} } ` : '';
-			if (arrExport || arrDefault) {
-				str.push(
-					`import ${arrDefault}${arrExport}${
-						arrDefault.length || arrExport.length ? 'from ' : ''
-					}'${el.package}'`,
-				);
-			}
-		});
-		return str.join(';\n');
-	};
-
-	//| result
+	*/
 
 	//! Formatted code
 	const formattedCodeText = removeNewLines(formattedCodeLinter({ code: text }));
 
+	/* 
+
+	* 💡 ru: 
+
+	* 💡 en: 
+
+	*/
+
 	//! Get code imports text
 	codeTextImport = getCodeImportText(formattedCodeText);
 
+	/* 
+
+	* 💡 ru: 
+
+	* 💡 en: 
+
+	*/
+
 	//! Get code main text
-	codeTextMain = getCodeMainText(formattedCodeText);
+	codeTextMain = removeNewLines(
+		formattedCodeLinter({ code: getCodeMainText(formattedCodeText) as string }),
+	);
+
+	/* 
+
+	* 💡 ru: 
+
+	* 💡 en: 
+
+	*/
 
 	//! Array Imports
 	const arrayImportsStr = getArrayImportPackages(codeTextImport);
 
+	/* 
+
+	* 💡 ru: 
+
+	* 💡 en: 
+
+	*/
+
 	//! Local Config for package
 	configDataFile.push(...baseSchemaArrayConfigLocal(arrayImportsStr));
 
+	/* 
+
+	* 💡 ru: 
+
+	* 💡 en: 
+
+	*/
+
 	//! Result Local Config
 	stringCodeToObject(gettingOnlyStringImports(codeTextImport), configDataFile);
+
+	/* 
+
+	* 💡 ru: 
+
+	* 💡 en: 
+
+	*/
 
 	configApp.forEach(el => {
 		el.triggerExport = removeUnusedArray(codeTextMain, el.triggerExport);
 		el.triggerDefault = removeUnusedArray(codeTextMain, el.triggerDefault);
 	});
 
+	/* 
+
+	* 💡 ru: 
+
+	* 💡 en: 
+
+	*/
+
 	configDataFile.forEach(el => {
 		el.triggerExport = removeUnusedArray(codeTextMain, el.triggerExport);
 		el.triggerDefault = removeUnusedArray(codeTextMain, el.triggerDefault);
 	});
 
+	/* 
+
+	* 💡 ru: 
+
+	* 💡 en: 
+
+	*/
+
 	//! Finally config
 	configDataFile.push(...joinArraysByPackage(configApp, configDataFile));
 
+	/* 
+
+	* 💡 ru: 
+
+	* 💡 en: 
+
+	*/
+
 	//! Result
 	const result = convertCode(configDataFile);
+
+	/* 
+
+	* 💡 ru: 
+
+	* 💡 en: 
+
+	*/
 
 	return `${result}\n\n${formattedCodeLinter({ code: formattingMainCode(text), type: 'finally' })}`;
 };
