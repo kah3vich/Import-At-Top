@@ -1,5 +1,13 @@
 import { arrayOfLetters } from '../constant';
 
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
+
 export const flattenArray = (arr: any[]) => {
 	return arr.reduce((acc, val) => {
 		if (val !== null) {
@@ -8,6 +16,14 @@ export const flattenArray = (arr: any[]) => {
 		return acc;
 	}, []);
 };
+
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
 
 export const cleaningUpExtraQuotes = (arr: any[]) => {
 	const packages: any[] = [];
@@ -19,6 +35,14 @@ export const cleaningUpExtraQuotes = (arr: any[]) => {
 	return [...new Set(packages)];
 };
 
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
+
 export const getArrayImportPackages = (importsCode: any) => {
 	const arrImportsString = gettingOnlyStringImports(importsCode);
 
@@ -26,6 +50,14 @@ export const getArrayImportPackages = (importsCode: any) => {
 		el.replace(/['"]+/g, ''),
 	);
 };
+
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
 
 export const baseSchemaArrayConfigLocal = (arr: any[]) => {
 	const result: any[] = [];
@@ -39,6 +71,14 @@ export const baseSchemaArrayConfigLocal = (arr: any[]) => {
 
 	return result;
 };
+
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
 
 export const gettingOnlyStringImports = (arr: any) => {
 	const result: any[] = [];
@@ -59,6 +99,14 @@ export const gettingOnlyStringImports = (arr: any) => {
 
 	return result;
 };
+
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
 
 export const stringCodeToObject = (arrImport: any[], arrPackages: any[]) => {
 	arrImport.forEach(imp => {
@@ -125,11 +173,27 @@ export const stringCodeToObject = (arrImport: any[], arrPackages: any[]) => {
 	});
 };
 
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
+
 export const removeUnusedArray = (text: any, triggerArr: any[]) => {
 	return triggerArr && triggerArr.length
 		? triggerArr.filter(word => text.includes(word))
 		: triggerArr;
 };
+
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
 
 export const sortArrayByField = (array: any[], field: string) => {
 	return array.sort(function (a, b) {
@@ -142,6 +206,14 @@ export const sortArrayByField = (array: any[], field: string) => {
 		return -1;
 	});
 };
+
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
 
 export const joinArraysByPackage = (config: any, packageResult: any) => {
 	const result: any[] = [];

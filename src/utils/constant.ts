@@ -1,5 +1,13 @@
 import type { TConfigApp, TFormatterApp } from './types';
 
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
+
 export const baseConfig: TConfigApp[] = [
 	{
 		triggerDefault: ['React'],
@@ -13,6 +21,14 @@ export const baseConfig: TConfigApp[] = [
 	},
 ];
 
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
+
 export const baseFormatter: TFormatterApp = {
 	printWidth: 120,
 	tabWidth: 4,
@@ -24,9 +40,11 @@ export const baseFormatter: TFormatterApp = {
 	singleQuote: true,
 };
 
-/*
+/* 
 
-Переменная ( массив ) для хранение алфавита в верхнем и нижнем регистре.
+* 💡 ru: 
+
+* 💡 en: 
 
 */
 

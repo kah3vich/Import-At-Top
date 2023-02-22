@@ -1,5 +1,13 @@
 import { sortArrayByField } from '../array';
 
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
+
 export const formattingMainCode = (code: string) => {
 	const arrWord = ['import', 'from'];
 	let id: number = 0;
@@ -19,6 +27,14 @@ export const formattingMainCode = (code: string) => {
 	return result;
 };
 
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
+
 export const getCodeImportText = (str: string) => {
 	const fromIndex = str.lastIndexOf('import');
 	let lastPart = str.substring(fromIndex);
@@ -28,6 +44,14 @@ export const getCodeImportText = (str: string) => {
 	return str.slice(0, fromIndex) + lastPart;
 };
 
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
+
 export const getCodeMainText = (str: string) => {
 	const fromIndex = str.lastIndexOf('import');
 	let lastPart = str.substring(fromIndex);
@@ -36,6 +60,14 @@ export const getCodeMainText = (str: string) => {
 	lastPart = lastPart.substring(0, secondQuoteIndex + 1);
 	return str.split(lastPart).pop();
 };
+
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
 
 export const convertCode = (arr: any[]) => {
 	const str: any[] = [];
