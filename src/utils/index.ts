@@ -5,7 +5,7 @@ import { baseConfig, baseFormatter } from './constant';
 import {
 	getArrayImportPackages,
 	baseSchemaArrayConfigLocal,
-	stringCodeToObject,
+	arrImportToObjectImport,
 	gettingOnlyStringImports,
 	removeUnusedArray,
 	joinArraysByPackage,
@@ -54,17 +54,17 @@ export const ImportAtTop = (
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Переменная для хранение объектов с данными из импортов - конфига и файла.
 
 	* 💡 en: 
 
 	*/
 
-	const configDataFile = [];
+	let configDataFile = [];
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Переменная для хранение исключительно импортов файла.
 
 	* 💡 en: 
 
@@ -74,7 +74,7 @@ export const ImportAtTop = (
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Переменная для хранение исключительно основного кода файла.
 
 	* 💡 en: 
 
@@ -86,7 +86,9 @@ export const ImportAtTop = (
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Функция форматирование кода.
+	* code - Код, которые нужно отформатировать через prettier и eslint.
+	* type - Тип форматирование, в типе - finally, использует настройки для форматирование из formatterApp.
 
 	* 💡 en: 
 
@@ -158,75 +160,83 @@ export const ImportAtTop = (
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Переменная, в которой получается отформатированый код и переделанный в одну строку без '\n'.
+	* formattedCodeLinter - форматирование кода.
+	* removeNewLines - переделывает в одну строку без '\n'.
 
 	* 💡 en: 
 
 	*/
 
-	//! Formatted code
 	const formattedCodeText = removeNewLines(formattedCodeLinter({ code: text }));
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Получение только текст с импортами из файлов.
+	* getCodeImportText - получение импортов из текста файла.
 
 	* 💡 en: 
 
 	*/
 
-	//! Get code imports text
 	codeTextImport = getCodeImportText(formattedCodeText);
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Получение основного кода из текста файла - отформатированный и в одну строку.
+	* getCodeMainText - получение основного кода.
+	* formattedCodeLinter - форматирование кода.
+	* removeNewLines - преобразовывает в одну строку, удаляя '\n'.
 
 	* 💡 en: 
 
 	*/
 
-	//! Get code main text
 	codeTextMain = removeNewLines(
 		formattedCodeLinter({ code: getCodeMainText(formattedCodeText) as string }),
 	);
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Переменная хранит массив с пакетами из импортов файла.
+	* getArrayImportPackages - перебирает и возвращает массив с пакетами импорта из файла.
 
 	* 💡 en: 
 
 	*/
 
-	//! Array Imports
 	const arrayImportsStr = getArrayImportPackages(codeTextImport);
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Удаление из массива с пакетами импортов дубликаты и передача в основную переменную с импортами.
+	* baseSchemaArrayConfigLocal - удаление дубликатов из массива.
 
 	* 💡 en: 
 
 	*/
 
-	//! Local Config for package
-	configDataFile.push(...baseSchemaArrayConfigLocal(arrayImportsStr));
+	configDataFile = baseSchemaArrayConfigLocal(arrayImportsStr);
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Преобразование текста с импортами в массив с данными об импортах.
+	* gettingOnlyStringImports - возвращает массив из строк импорта.
+	* stringCodeToObject - преобразовывает строки импортов в объект с данными об импорте.
 
 	* 💡 en: 
 
 	*/
 
-	//! Result Local Config
-	stringCodeToObject(gettingOnlyStringImports(codeTextImport), configDataFile);
+	configDataFile = arrImportToObjectImport(
+		gettingOnlyStringImports(codeTextImport),
+		configDataFile,
+	);
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Перебор значений в массиве конфигурационных данных из основной части кода, на наличия элементов в массиве импортов.
+	* removeUnusedArray - проверяет, если ли в текст нужное слово
 
 	* 💡 en: 
 
@@ -239,42 +249,51 @@ export const ImportAtTop = (
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Перебор значений в массиве импортов файла из основной части кода, на наличия элементов в массиве импортов.
+	* removeUnusedArray - проверяет, если ли в текст нужное слово
 
 	* 💡 en: 
 
 	*/
+	console.log('✅ configDataFile 1   ', configDataFile);
 
 	configDataFile.forEach(el => {
 		el.triggerExport = removeUnusedArray(codeTextMain, el.triggerExport);
 		el.triggerDefault = removeUnusedArray(codeTextMain, el.triggerDefault);
 	});
 
+	console.log('✅ configDataFile 2   ', configDataFile);
+
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Соединение массивов конфига и файла.
+	* joinArraysByPackage - используя массивы сравнивание и соединяет массивы ( массив конфига и массив полученный из файла )
 
 	* 💡 en: 
 
 	*/
 
-	//! Finally config
-	configDataFile.push(...joinArraysByPackage(configApp, configDataFile));
+	configDataFile = joinArraysByPackage(configApp, configDataFile);
+
+	console.log('✅ configDataFile 3   ', configDataFile);
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Переменная с конвертированными импортами в строку.
+	* convertCode - преобразование импортов из массива в строку.
 
 	* 💡 en: 
 
 	*/
 
-	//! Result
 	const result = convertCode(configDataFile);
 
 	/* 
 
-	* 💡 ru: 
+	* 💡 ru: Финальный результат 
+	* result - переменная с итоговыми импортами 
+	* formattingMainCode - получение основного кода из файла пользователя.
+	* formattedCodeLinter - форматирование кода с финальным типом ( дополнительные параметры для форматирование )
 
 	* 💡 en: 
 

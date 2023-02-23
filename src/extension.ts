@@ -12,8 +12,6 @@ export const activate = (context: vscode.ExtensionContext) => {
 		const documentText = document.getText();
 		const configExtension: any = vscode.workspace.getConfiguration('import-at-top').get('config');
 
-		console.log('configExtension !!!    ', configExtension);
-
 		const formatterExtension: any = vscode.workspace
 			.getConfiguration('import-at-top')
 			.get('formatter');

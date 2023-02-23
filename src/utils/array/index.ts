@@ -108,15 +108,20 @@ export const gettingOnlyStringImports = (arr: any) => {
 
 */
 
-export const stringCodeToObject = (arrImport: any[], arrPackages: any[]) => {
+export const arrImportToObjectImport = (arrImport: any[], arrPackages: any[]) => {
 	arrImport.forEach(imp => {
 		arrPackages.forEach(el => {
 			if (imp.match(/'(.*?)'/)[1] === el.package) {
 				let exportsArr: any[] = [];
 				let defaultsArr: any[] = [];
-				let checkWord: boolean = true;
-				let checkDefault: boolean = true;
 				let wordTrigger: any[] = [];
+				let checkWord = true;
+				let checkDefault = true;
+				let activeWordAs = false;
+
+				if (imp.includes(' as ')) {
+					activeWordAs = true;
+				}
 
 				imp
 					.split('')
@@ -128,9 +133,9 @@ export const stringCodeToObject = (arrImport: any[], arrPackages: any[]) => {
 						if (el === '}') {
 							if (wordTrigger.length) {
 								if (checkDefault) {
-									defaultsArr.push(wordTrigger.join(''));
+									defaultsArr.push(wordTrigger.join('').trim());
 								} else {
-									exportsArr.push(wordTrigger.join(''));
+									exportsArr.push(wordTrigger.join('').trim());
 								}
 							}
 							wordTrigger = [];
@@ -147,12 +152,29 @@ export const stringCodeToObject = (arrImport: any[], arrPackages: any[]) => {
 							wordTrigger = [];
 							checkWord = false;
 						}
-						if (el === ' ' || el === ',') {
+
+						if (el === ' ') {
+							if (activeWordAs) {
+								wordTrigger.push(el);
+								checkWord = true;
+							} else {
+								if (wordTrigger.length) {
+									if (checkDefault) {
+										defaultsArr.push(wordTrigger.join('').trim());
+									} else {
+										exportsArr.push(wordTrigger.join('').trim());
+									}
+								}
+								wordTrigger = [];
+								checkWord = false;
+							}
+						}
+						if (el === ',') {
 							if (wordTrigger.length) {
 								if (checkDefault) {
-									defaultsArr.push(wordTrigger.join(''));
+									defaultsArr.push(wordTrigger.join('').trim());
 								} else {
-									exportsArr.push(wordTrigger.join(''));
+									exportsArr.push(wordTrigger.join('').trim());
 								}
 							}
 							wordTrigger = [];
@@ -171,6 +193,7 @@ export const stringCodeToObject = (arrImport: any[], arrPackages: any[]) => {
 			}
 		});
 	});
+	return arrPackages;
 };
 
 /* 
@@ -182,9 +205,15 @@ export const stringCodeToObject = (arrImport: any[], arrPackages: any[]) => {
 */
 
 export const removeUnusedArray = (text: any, triggerArr: any[]) => {
-	return triggerArr && triggerArr.length
-		? triggerArr.filter(word => text.includes(word))
-		: triggerArr;
+	if (triggerArr.length) {
+		return triggerArr.filter(word => {
+			if (word.includes(' as ')) {
+				return text.includes(word.split(' as ')[1]);
+			}
+			return text.includes(word);
+		});
+	}
+	return triggerArr;
 };
 
 /* 
@@ -196,7 +225,7 @@ export const removeUnusedArray = (text: any, triggerArr: any[]) => {
 */
 
 export const sortArrayByField = (array: any[], field: string) => {
-	return array.sort(function (a, b) {
+	return array.sort((a, b) => {
 		if (a[field] < b[field]) {
 			return 0;
 		}
@@ -218,10 +247,14 @@ export const sortArrayByField = (array: any[], field: string) => {
 export const joinArraysByPackage = (config: any, packageResult: any) => {
 	const result: any[] = [];
 
+	console.log('✅ joinArraysByPackage    ');
+
 	config.forEach((conf: any) => {
-		const matchingResult = packageResult.find(
-			(packageData: any) => packageData.package === conf.package,
-		);
+		const matchingResult = packageResult.find((packageData: any) => {
+			console.log('✅ packageData.package === conf.package    ', packageData.package, conf.package);
+			return packageData.package === conf.package;
+		});
+
 		if (matchingResult) {
 			result.push({
 				triggerDefault: [...new Set([...conf.triggerDefault, ...matchingResult.triggerDefault])],

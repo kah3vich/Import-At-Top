@@ -92,5 +92,6 @@ export const convertCode = (arr: any[]) => {
 			);
 		}
 	});
+
 	return str.join(';\n');
 };
