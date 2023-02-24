@@ -1,38 +1,50 @@
 import { arrImportToObjectImport } from '../src/utils/array';
 import { consoleLog } from '../src/utils/other';
 
-const componentCode = `
-import { useState, State as Components } from 'react';
-import React from 'react';
-import type { TUser, TAdmin } from './types';
-import { useRef } from 'react';
-import { Svg as Component, Svgs as Component, Old } from '../../icon.svg';
-import './styles.css';
-import { useEffect, useId } from 'react';
-import React from 'react';
+/* 
 
-export type TImportAtTopProps = {
-	data: string;
-};
+* 💡 ru: 
 
-const _ImportAtTop = ({ data }: TImportAtTopProps & TUser) => {
-	useEffect(() => {
-		console.log('✅ element    ', 000);
-	}, []);
+* 💡 en: 
 
-	const sta = State;
+*/
 
-	return <Svg>{data}</Svg>;
-};
+// describe('Import At Top', () => {
+// 	test('Function - ImportAtTop', () => {
+// 		expect(ImportAtTop(testComponentCodeStart, baseConfig, baseFormatter)).toBe(
+// 			testComponentCodeEnd,
+// 		);
+// 	});
+// });
 
-export const ImportAtTop = React.memo(_ImportAtTop);
-`;
+/* 
 
-test('Console log works', () => {
-	expect(consoleLog('Nano Snippets', 'log')).toBe('Nano Snippets');
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
+
+describe('Utils - Other', () => {
+	//|
+	test('Function - consoleLog type: "Log"', () => {
+		expect(consoleLog('Nano Snippets', 'log')).toBe('✅ Nano Snippets');
+	});
+	test('Function - consoleLog type: "Err"', () => {
+		expect(consoleLog('Nano Snippets', 'err')).toBe('❌ Nano Snippets');
+	});
 });
 
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
+
 describe('Utils - Array', () => {
+	//|
 	test('Function - arrImportToObjectImport', () => {
 		expect(
 			arrImportToObjectImport(

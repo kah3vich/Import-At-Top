@@ -91,6 +91,9 @@ export const convertCode = (arr: any[]) => {
 				}'`,
 			);
 		}
+		if (arrExport === '' && arrDefault === '') {
+			str.push(`import '${el.package}'`);
+		}
 	});
 
 	return str.join(';\n');

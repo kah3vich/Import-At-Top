@@ -8,7 +8,7 @@ import {
 	arrImportToObjectImport,
 	gettingOnlyStringImports,
 	removeUnusedArray,
-	joinArraysByPackage,
+	joinArraysConfigAndImportFile,
 } from './array';
 import { copyArray, removeNewLines } from './other';
 import { getCodeImportText, getCodeMainText, convertCode, formattingMainCode } from './text';
@@ -273,7 +273,7 @@ export const ImportAtTop = (
 
 	*/
 
-	configDataFile = joinArraysByPackage(configApp, configDataFile);
+	configDataFile = joinArraysConfigAndImportFile(configApp, configDataFile);
 
 	console.log('✅ configDataFile 3   ', configDataFile);
 
@@ -301,3 +301,11 @@ export const ImportAtTop = (
 
 	return `${result}\n\n${formattedCodeLinter({ code: formattingMainCode(text), type: 'finally' })}`;
 };
+
+//| Export
+
+export * from './array';
+export * from './other';
+export * from './text';
+export * from './constant';
+export * from './types';

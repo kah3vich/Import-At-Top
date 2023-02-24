@@ -244,32 +244,63 @@ export const sortArrayByField = (array: any[], field: string) => {
 
 */
 
-export const joinArraysByPackage = (config: any, packageResult: any) => {
-	const result: any[] = [];
+export const removeDuplicatesByPackage = (arr: any[]) => {
+	let seen: any = {};
+	let result: any[] = [];
 
-	console.log('✅ joinArraysByPackage    ');
-
-	config.forEach((conf: any) => {
-		const matchingResult = packageResult.find((packageData: any) => {
-			console.log('✅ packageData.package === conf.package    ', packageData.package, conf.package);
-			return packageData.package === conf.package;
-		});
-
-		if (matchingResult) {
-			result.push({
-				triggerDefault: [...new Set([...conf.triggerDefault, ...matchingResult.triggerDefault])],
-				triggerExport: [...new Set([...conf.triggerExport, ...matchingResult.triggerExport])],
-				package: conf.package,
-			});
-			packageResult.splice(packageResult.indexOf(matchingResult), 1);
-		} else {
-			result.push({
-				triggerDefault: [...new Set(conf.triggerDefault)],
-				triggerExport: [...new Set(conf.triggerExport)],
-				package: conf.package,
-			});
+	arr.forEach(item => {
+		if (!seen[item.package]) {
+			seen[item.package] = true;
+			result.push(item);
 		}
 	});
+
+	return result;
+};
+
+/* 
+
+* 💡 ru: 
+
+* 💡 en: 
+
+*/
+
+export const joinArraysConfigAndImportFile = (config: any[], packageResult: any[]) => {
+	let result: any[] = [];
+
+	config.forEach(conf => {
+		packageResult.forEach(pack => {
+			if (conf.package === pack.package) {
+				result.push({
+					triggerDefault: [...new Set([...conf.triggerDefault, ...pack.triggerDefault])],
+					triggerExport: [...new Set([...conf.triggerExport, ...pack.triggerExport])],
+					package: conf.package,
+				});
+			} else {
+				result.push({
+					triggerDefault: [...new Set([...pack.triggerDefault])],
+					triggerExport: [...new Set([...pack.triggerExport])],
+					package: pack.package,
+				});
+			}
+			if (
+				pack.triggerDefault === ([] as any) &&
+				pack.triggerExport === ([] as any) &&
+				(pack.package.includes('.css') ||
+					pack.package.includes('.scss') ||
+					pack.package.includes('.sass'))
+			) {
+				result.push({
+					triggerDefault: [],
+					triggerExport: [],
+					package: pack.package,
+				});
+			}
+		});
+	});
+
+	result = removeDuplicatesByPackage(result);
 
 	return result;
 };

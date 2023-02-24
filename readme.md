@@ -4,7 +4,7 @@
         <img src="https://raw.githubusercontent.com/kah3vich/Import-At-Top/master/assets/logo.png" alt="logo" width="256">
         <br/>
         <br/>
-        Import At Top
+        Import At Top (Beta)
         <br/>
         <br/>
     </a>
@@ -35,8 +35,16 @@
 
 <br/>
 
+### Win
+
 ```bash
-Ctrl + Alt + I - import-at-top (Command + Option + I)
+Ctrl + Alt + S - import-at-top (command)
+```
+
+### MacOS & Linux
+
+```bash
+Command + Option + S - import-at-top (command)
 ```
 
 <br/>

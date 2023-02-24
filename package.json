@@ -1,7 +1,7 @@
 {
 	"name": "import-at-top",
 	"publisher": "kah3vich",
-	"displayName": "Import At Top",
+	"displayName": "Import At Top (Beta)",
 	"description": "An extension that adds imports to the source file from the specified options in the configuration file, and also sorts and removes unnecessary imports, which improves and speeds up the user experience.",
 	"repository": {
 		"type": "git",
@@ -87,7 +87,7 @@
 		"onCommand:import-at-top"
 	],
 	"icon": "assets/logo.png",
-	"license": "GPL-3.0-only",
+	"license": "Import At Top License",
 	"author": {
 		"name": "kah3vich",
 		"url": "https://github.com/kah3vich"
@@ -111,10 +111,10 @@
 	],
 	"homepage": "https://github.com/kah3vich/Import-At-Top/readme.md",
 	"scripts": {
-		"build": "rm -rf out/ & vsce package & npm run test",
+		"build": "rm -rf out/ & clear & vsce package",
 		"vscode:prepublish": "tsc -p ./",
 		"watcher": "tsc -watch -p ./",
-		"test": "jest --config ./jest.config.js",
+		"test": "rm -rf out/ & clear & jest --config ./jest.config.js",
 		"prepare": "husky install"
 	},
 	"devDependencies": {
