@@ -1,5 +1,8 @@
+import { baseConfig, baseFormatter } from '../src/utils/constant';
+import { ImportAtTop } from '../src/utils/index';
 import { arrImportToObjectImport } from '../src/utils/array';
-import { consoleLog } from '../src/utils/other';
+import { consoleLog, copyArray, removeNewLines } from '../src/utils/other';
+import { testComponentCodeStart, testComponentCodeEnd } from './constant';
 
 /* 
 
@@ -9,13 +12,13 @@ import { consoleLog } from '../src/utils/other';
 
 */
 
-// describe('Import At Top', () => {
-// 	test('Function - ImportAtTop', () => {
-// 		expect(ImportAtTop(testComponentCodeStart, baseConfig, baseFormatter)).toBe(
-// 			testComponentCodeEnd,
-// 		);
-// 	});
-// });
+describe('Import At Top', () => {
+	test('Function - ImportAtTop', () => {
+		expect(ImportAtTop(testComponentCodeStart, baseConfig, baseFormatter)).toBe(
+			testComponentCodeEnd,
+		);
+	});
+});
 
 /* 
 
@@ -27,11 +30,28 @@ import { consoleLog } from '../src/utils/other';
 
 describe('Utils - Other', () => {
 	//|
-	test('Function - consoleLog type: "Log"', () => {
+	test('Function - consoleLog (type: "Log")', () => {
 		expect(consoleLog('Nano Snippets', 'log')).toBe('✅ Nano Snippets');
 	});
-	test('Function - consoleLog type: "Err"', () => {
+	test('Function - consoleLog (type: "Err")', () => {
 		expect(consoleLog('Nano Snippets', 'err')).toBe('❌ Nano Snippets');
+	});
+
+	//|
+	test('Function - copyArray', () => {
+		expect(copyArray(['import', 'React', 'from', 'react'])).toStrictEqual([
+			'import',
+			'React',
+			'from',
+			'react',
+		]);
+	});
+
+	//|
+	test('Function - removeNewLines', () => {
+		expect(removeNewLines('import React from "react";\nimport { createStory } from "redux";')).toBe(
+			'import React from "react";import { createStory } from "redux";',
+		);
 	});
 });
 

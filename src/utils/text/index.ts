@@ -9,7 +9,7 @@ import { sortArrayByField } from '../array';
 */
 
 export const formattingMainCode = (code: string) => {
-	const arrWord = ['import', 'from'];
+	const arrWord = ['import ', 'from "', "from '"];
 	let id: number = 0;
 	let result = '';
 	const codeArr = code.split('\n');
@@ -58,7 +58,12 @@ export const getCodeMainText = (str: string) => {
 	const firstQuoteIndex = lastPart.indexOf("'");
 	const secondQuoteIndex = lastPart.indexOf("'", firstQuoteIndex + 1);
 	lastPart = lastPart.substring(0, secondQuoteIndex + 1);
+
+	// if (`${str.split(lastPart).pop()}`.split('')[0] === ';') {
+	// 	return `${str.split(lastPart).pop()}`.split('').slice(1).join('');
+	// } else {
 	return str.split(lastPart).pop();
+	// }
 };
 
 /* 

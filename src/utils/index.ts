@@ -97,63 +97,67 @@ export const ImportAtTop = (
 	const formattedCodeLinter = ({ code, type = 'finally' }: TFormattedCodeLinter) => {
 		if (type === 'develop') {
 			// Use prettier - Develop
-			const formattedCode = prettier.format(code, {
-				semi: true,
-				singleQuote: true,
-				trailingComma: 'es5',
-				arrowParens: 'always',
-				parser: 'babel',
-			});
+			// const formattedCode = prettier.format(code, {
+			// 	semi: true,
+			// 	singleQuote: true,
+			// 	trailingComma: 'es5',
+			// 	arrowParens: 'always',
+			// 	parser: 'typescript',
+			// });
+
+			return code;
 
 			// Use eslint - Develop
-			const linter = new eslint.Linter();
-			const lintingErrors = linter.verifyAndFix(formattedCode, {
-				parserOptions: {
-					ecmaVersion: 6,
-					sourceType: 'module',
-					ecmaFeatures: {
-						jsx: true,
-					},
-				},
-				rules: {
-					'no-unused-vars': 2,
-				},
-			});
+			// const linter = new eslint.Linter();
+			// const lintingErrors = linter.verifyAndFix(formattedCode, {
+			// 	parserOptions: {
+			// 		ecmaVersion: 6,
+			// 		sourceType: 'module',
+			// 		ecmaFeatures: {
+			// 			jsx: true,
+			// 		},
+			// 	},
+			// 	rules: {
+			// 		'no-unused-vars': 2,
+			// 	},
+			// });
 
-			return lintingErrors.output;
+			// return lintingErrors.output;
 		}
 
 		// Use prettier - Finally
-		const formattedCode = prettier.format(code, {
-			semi: formatterApp.semi,
-			printWidth: formatterApp.printWidth,
-			tabWidth: formatterApp.tabWidth,
-			useTabs: formatterApp.useTabs,
-			bracketSpacing: formatterApp.bracketSpacing,
-			bracketSameLine: formatterApp.bracketSameLine,
-			jsxBracketSameLine: formatterApp.jsxBracketSameLine,
-			singleQuote: formatterApp.singleQuote,
-			trailingComma: 'es5',
-			arrowParens: 'always',
-			parser: 'babel',
-		});
+		// const formattedCode = prettier.format(code, {
+		// 	semi: formatterApp.semi,
+		// 	printWidth: formatterApp.printWidth,
+		// 	tabWidth: formatterApp.tabWidth,
+		// 	useTabs: formatterApp.useTabs,
+		// 	bracketSpacing: formatterApp.bracketSpacing,
+		// 	bracketSameLine: formatterApp.bracketSameLine,
+		// 	jsxBracketSameLine: formatterApp.jsxBracketSameLine,
+		// 	singleQuote: formatterApp.singleQuote,
+		// 	trailingComma: 'es5',
+		// 	arrowParens: 'always',
+		// 	parser: 'babel',
+		// });
+
+		return code;
 
 		// Use eslint - Finally
-		const linter = new eslint.Linter();
-		const lintingErrors = linter.verifyAndFix(formattedCode, {
-			parserOptions: {
-				ecmaVersion: 6,
-				sourceType: 'module',
-				ecmaFeatures: {
-					jsx: true,
-				},
-			},
-			rules: {
-				'no-unused-vars': 2,
-			},
-		});
+		// const linter = new eslint.Linter();
+		// const lintingErrors = linter.verifyAndFix(formattedCode, {
+		// 	parserOptions: {
+		// 		ecmaVersion: 6,
+		// 		sourceType: 'module',
+		// 		ecmaFeatures: {
+		// 			jsx: true,
+		// 		},
+		// 	},
+		// 	rules: {
+		// 		'no-unused-vars': 2,
+		// 	},
+		// });
 
-		return lintingErrors.output;
+		// return lintingErrors.output;
 	};
 
 	//| ✅ Main Process
@@ -255,14 +259,11 @@ export const ImportAtTop = (
 	* 💡 en: 
 
 	*/
-	console.log('✅ configDataFile 1   ', configDataFile);
 
 	configDataFile.forEach(el => {
 		el.triggerExport = removeUnusedArray(codeTextMain, el.triggerExport);
 		el.triggerDefault = removeUnusedArray(codeTextMain, el.triggerDefault);
 	});
-
-	console.log('✅ configDataFile 2   ', configDataFile);
 
 	/* 
 
@@ -274,8 +275,6 @@ export const ImportAtTop = (
 	*/
 
 	configDataFile = joinArraysConfigAndImportFile(configApp, configDataFile);
-
-	console.log('✅ configDataFile 3   ', configDataFile);
 
 	/* 
 
@@ -299,7 +298,10 @@ export const ImportAtTop = (
 
 	*/
 
-	return `${result}\n\n${formattedCodeLinter({ code: formattingMainCode(text), type: 'finally' })}`;
+	return `${result}\n\n${formattedCodeLinter({
+		code: formattingMainCode(text),
+		type: 'finally',
+	}).trim()}`;
 };
 
 //| Export

@@ -32,9 +32,9 @@ export const copyArray = (arr: any[]) => {
 
 export const consoleLog = (str: string, type: 'log' | 'err') => {
 	if (type === 'log') {
-		// console.log(`✅ ${str}`);
+		console.log(`✅ ${str}`);
 		return `✅ ${str}`;
 	}
-	// console.error(`❌ ${str}`);
+	console.error(`❌ ${str}`);
 	return `❌ ${str}`;
 };

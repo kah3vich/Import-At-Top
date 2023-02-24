@@ -277,7 +277,8 @@ export const joinArraysConfigAndImportFile = (config: any[], packageResult: any[
 					triggerExport: [...new Set([...conf.triggerExport, ...pack.triggerExport])],
 					package: conf.package,
 				});
-			} else {
+			}
+			if (pack.triggerDefault.length !== 0 && pack.triggerExport.length !== 0) {
 				result.push({
 					triggerDefault: [...new Set([...pack.triggerDefault])],
 					triggerExport: [...new Set([...pack.triggerExport])],
@@ -285,15 +286,25 @@ export const joinArraysConfigAndImportFile = (config: any[], packageResult: any[
 				});
 			}
 			if (
-				pack.triggerDefault === ([] as any) &&
-				pack.triggerExport === ([] as any) &&
+				pack.triggerDefault.length === 0 &&
+				pack.triggerExport.length === 0 &&
 				(pack.package.includes('.css') ||
 					pack.package.includes('.scss') ||
-					pack.package.includes('.sass'))
+					pack.package.includes('.sass') ||
+					pack.package.includes('/css') ||
+					pack.package.includes('/scss') ||
+					pack.package.includes('/sass'))
 			) {
 				result.push({
 					triggerDefault: [],
 					triggerExport: [],
+					package: pack.package,
+				});
+			}
+			if (pack.triggerDefault.length !== 0 || pack.triggerExport.length !== 0) {
+				result.push({
+					triggerDefault: [...new Set([...pack.triggerDefault])],
+					triggerExport: [...new Set([...pack.triggerExport])],
 					package: pack.package,
 				});
 			}

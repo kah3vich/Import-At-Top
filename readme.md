@@ -54,7 +54,6 @@ Command + Option + S - import-at-top (command)
 <br/>
 
 ```bash
-//| Config
 
 "import-at-top.config": [
 	{
@@ -65,6 +64,12 @@ Command + Option + S - import-at-top (command)
 ]
 ```
 
+### > triggerDefault -
+
+### > triggerExport -
+
+### > package -
+
 <br/>
 
 # Formatter
@@ -72,7 +77,6 @@ Command + Option + S - import-at-top (command)
 <br/>
 
 ```bash
-//| Formatting
 
 "import-at-top.formatter": {
 	"printWidth": 120,
@@ -85,3 +89,19 @@ Command + Option + S - import-at-top (command)
 	"singleQuote": true
 }
 ```
+
+### > printWidth -
+
+### > tabWidth -
+
+### > useTabs -
+
+### > semi -
+
+### > bracketSpacing -
+
+### > bracketSameLine -
+
+### > jsxBracketSameLine -
+
+### > singleQuote -
