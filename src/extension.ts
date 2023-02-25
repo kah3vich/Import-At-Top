@@ -21,7 +21,7 @@ export const activate = (context: vscode.ExtensionContext) => {
 			const result = ImportAtTop(documentText, configExtension, formatterConfigExtension);
 
 			vscode.window.showInformationMessage('✅ - Import At Top');
-			consoleLog(` - Import At Top`, 'log');
+			consoleLog(`- Import At Top`, 'log');
 			editor.edit(editBuilder => {
 				editBuilder.replace(
 					new vscode.Range(document.positionAt(0), document.positionAt(documentText.length)),
@@ -30,7 +30,7 @@ export const activate = (context: vscode.ExtensionContext) => {
 			});
 		} catch (Error) {
 			vscode.window.showInformationMessage(`❌ - Import At Top: ${Error}`);
-			consoleLog(` - Import At Top   ${Error}`, 'err');
+			consoleLog(`- Import At Top   ${Error}`, 'err');
 		}
 
 		context.subscriptions.push(disposable);

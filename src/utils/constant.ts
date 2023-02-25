@@ -51,4 +51,5 @@ export const baseFormatter: TFormatterApp = {
 export const arrayOfLetters: string[] = [
 	...'abcdefghijklmnopqrstuvwxyz'.toLocaleLowerCase().split(''),
 	...'abcdefghijklmnopqrstuvwxyz'.toLocaleUpperCase().split(''),
+	...'*',
 ];

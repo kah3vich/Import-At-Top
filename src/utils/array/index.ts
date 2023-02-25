@@ -115,12 +115,18 @@ export const arrImportToObjectImport = (arrImport: any[], arrPackages: any[]) =>
 				let exportsArr: any[] = [];
 				let defaultsArr: any[] = [];
 				let wordTrigger: any[] = [];
+
 				let checkWord = true;
 				let checkDefault = true;
 				let activeWordAs = false;
+				let activeWordAllAs = false;
 
 				if (imp.includes(' as ')) {
 					activeWordAs = true;
+				}
+
+				if (imp.includes(' * as ')) {
+					activeWordAllAs = true;
 				}
 
 				imp
@@ -169,6 +175,17 @@ export const arrImportToObjectImport = (arrImport: any[], arrPackages: any[]) =>
 								checkWord = false;
 							}
 						}
+						if (activeWordAllAs && wordTrigger.join('').includes(' from ')) {
+							if (checkDefault) {
+								defaultsArr.push(
+									wordTrigger.slice(0, wordTrigger.join('').indexOf(' from ')).join('').trim(),
+								);
+							} else {
+								exportsArr.push(
+									wordTrigger.slice(0, wordTrigger.join('').indexOf(' from ')).join('').trim(),
+								);
+							}
+						}
 						if (el === ',') {
 							if (wordTrigger.length) {
 								if (checkDefault) {
@@ -183,6 +200,7 @@ export const arrImportToObjectImport = (arrImport: any[], arrPackages: any[]) =>
 						arrayOfLetters.forEach(word => {
 							if (el === word) {
 								wordTrigger.push(el);
+
 								checkWord = true;
 							}
 						});
