@@ -10,6 +10,9 @@
     </a>
 </h1>
 
+> [!WARNING]
+> This extension is in beta testing.
+
 <h4 align="center">An extension that adds imports to the source file from the specified options in the configuration file, and also sorts and removes unnecessary imports, which improves and speeds up the user experience.</h4>
 
 <br/>
@@ -64,44 +67,16 @@ Command + Option + S - import-at-top (command)
 ]
 ```
 
-### > triggerDefault -
+<br/>
 
-### > triggerExport -
-
-### > package -
+> ### <b>importDefault</b> - this is a list of words (for importing default values) that the extension will respond to when importing your dependencies: import React from 'react'.
 
 <br/>
 
-# Formatter
+> ### <b>importExport</b> - this is a list of words (for importing a named value) that the extension will respond to to import your dependencies: import { useState } from 'react'.
 
 <br/>
 
-```bash
+> ### <b>package</b> - the name of the path or package from which the import will go.
 
-"import-at-top.formatter": {
-	"printWidth": 120,
-	"tabWidth": 4,
-	"useTabs": true,
-	"semi": true,
-	"bracketSpacing": true,
-	"bracketSameLine": false,
-	"jsxBracketSameLine": false,
-	"singleQuote": true
-}
-```
-
-### > printWidth -
-
-### > tabWidth -
-
-### > useTabs -
-
-### > semi -
-
-### > bracketSpacing -
-
-### > bracketSameLine -
-
-### > jsxBracketSameLine -
-
-### > singleQuote -
+<br/>
