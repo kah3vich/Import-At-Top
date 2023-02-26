@@ -7,7 +7,7 @@
 		"type": "git",
 		"url": "https://github.com/kah3vich/Import-At-Top"
 	},
-	"version": "0.0.33",
+	"version": "0.0.34",
 	"engines": {
 		"vscode": "^1.60.0"
 	},
@@ -115,7 +115,7 @@
 	],
 	"homepage": "https://github.com/kah3vich/Import-At-Top/readme.md",
 	"scripts": {
-		"build": "rm -rf out/ & clear & vsce package",
+		"build": "rm -rf out/ & vsce package",
 		"vscode:prepublish": "tsc -p ./",
 		"watcher": "tsc -watch -p ./",
 		"test": "rm -rf out/ & clear & jest --config ./jest.config.js",

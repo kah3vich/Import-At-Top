@@ -11,7 +11,18 @@ import type { TConfigApp, TFormatterApp } from './types';
 export const baseConfig: TConfigApp[] = [
 	{
 		importDefault: ['React'],
-		importExport: ['useState', 'useId', 'useRef'],
+		importExport: [
+			'useState',
+			'useEffect',
+			'useContext',
+			'useReducer',
+			'useCallback',
+			'useMemo',
+			'useRef',
+			'useImperativeHandle',
+			'useLayoutEffect',
+			'useDebugValue',
+		],
 		package: 'react',
 	},
 	{

@@ -1,17 +1,5 @@
-import * as prettier from 'prettier';
-import * as eslint from 'eslint';
-import type { TConfigApp, TFormattedCodeLinter, TFormatterApp } from './types';
-import { baseConfig, baseFormatter } from './constant';
-import {
-	getArrayImportPackages,
-	baseSchemaArrayConfigLocal,
-	arrImportToObjectImport,
-	gettingOnlyStringImports,
-	removeUnusedArray,
-	joinArraysConfigAndImportFile,
-} from './array';
-import { copyArray, removeNewLines } from './other';
-import { getCodeImportText, getCodeMainText, convertCode, formattingMainCode } from './text';
+import type { TConfigApp } from './types';
+import { baseConfig } from './constant';
 
 /* 
 
@@ -532,7 +520,7 @@ export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
 			convertImportsArrObjectToArrStringImport(copyArray(arrImports)),
 		);
 
-		return `${result.join('\n')}${codeMain.split('\n')[0] === '' ? '\n' : ''}${codeMain}`;
+		return `${result.join('\n')}\n${codeMain}`;
 	};
 
 	const result = finallyCode(arrImportsResult, codeMainFile);
