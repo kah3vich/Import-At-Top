@@ -18,7 +18,7 @@ export const activate = (context: vscode.ExtensionContext) => {
 			.get('formatter');
 
 		try {
-			const result = ImportAtTop(documentText, configExtension, formatterConfigExtension);
+			const result = ImportAtTop(documentText, configExtension);
 
 			vscode.window.showInformationMessage('✅ - Import At Top');
 			consoleLog(`- Import At Top`, 'log');

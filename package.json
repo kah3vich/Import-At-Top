@@ -11,7 +11,11 @@
 	"engines": {
 		"vscode": "^1.60.0"
 	},
+	"extensionPack": [
+		"kah3vich.nanosnippets"
+	],
 	"categories": [
+		"Extension Packs",
 		"Other",
 		"Formatters",
 		"Linters",
@@ -47,10 +51,10 @@
 					"description": "✅ Config params - Import At Top",
 					"default": [
 						{
-							"triggerDefault": [
+							"importDefault": [
 								"React"
 							],
-							"triggerExport": [
+							"importExport": [
 								"useState",
 								"useId",
 								"useRef"
@@ -58,8 +62,8 @@
 							"package": "react"
 						},
 						{
-							"triggerDefault": [],
-							"triggerExport": [
+							"importDefault": [],
+							"importExport": [
 								"createStore"
 							],
 							"package": "redux"

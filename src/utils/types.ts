@@ -1,6 +1,6 @@
 export type TConfigApp = {
-	triggerDefault: string[];
-	triggerExport: string[];
+	importDefault: string[];
+	importExport: string[];
 	package: string;
 };
 

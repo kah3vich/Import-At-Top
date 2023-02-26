@@ -10,13 +10,13 @@ import type { TConfigApp, TFormatterApp } from './types';
 
 export const baseConfig: TConfigApp[] = [
 	{
-		triggerDefault: ['React'],
-		triggerExport: ['useState', 'useId', 'useRef'],
+		importDefault: ['React'],
+		importExport: ['useState', 'useId', 'useRef'],
 		package: 'react',
 	},
 	{
-		triggerDefault: [],
-		triggerExport: ['createStore'],
+		importDefault: ['Redux'],
+		importExport: ['createStore'],
 		package: 'redux',
 	},
 ];

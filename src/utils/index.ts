@@ -21,293 +21,521 @@ import { getCodeImportText, getCodeMainText, convertCode, formattingMainCode } f
 
 */
 
-export const ImportAtTop = (
-	text: string,
-	configExtension: TConfigApp[],
-	formatterExtension: TFormatterApp,
-) => {
+export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
 	//| ✅ Variable
 
-	/* 
-
-	* 💡 ru: Переменная для хранения конфигураций импортов - пользовательские конфигурации или базовый конфигурация расширения:
-	* configExtension - пользовательские конфигурации.
-	* baseConfig - базовый конфигурация расширения.
-
-	* 💡 en: 
-
-	*/
-
-	const configApp: TConfigApp[] = copyArray(configExtension) || copyArray(baseConfig);
-
-	/* 
-
-	* 💡 ru: Переменная для хранения параметров финального форматирование импортов - пользовательские параметры или базовый параметры расширения:
-	* formatterExtension - пользовательские параметры.
-	* baseFormatter - базовый параметры расширения.
-
-	* 💡 en: 
-
-	*/
-
-	const formatterApp = formatterExtension || baseFormatter;
-
-	/* 
-
-	* 💡 ru: Переменная для хранение объектов с данными из импортов - конфига и файла.
-
-	* 💡 en: 
-
-	*/
-
-	let configDataFile = [];
-
-	/* 
-
-	* 💡 ru: Переменная для хранение исключительно импортов файла.
-
-	* 💡 en: 
-
-	*/
-
-	let codeTextImport = ``;
-
-	/* 
-
-	* 💡 ru: Переменная для хранение исключительно основного кода файла.
-
-	* 💡 en: 
-
-	*/
-
-	let codeTextMain = ``;
-
-	//| ✅ Formatted
-
-	/* 
-
-	* 💡 ru: Функция форматирование кода.
-	* code - Код, которые нужно отформатировать через prettier и eslint.
-	* type - Тип форматирование, в типе - finally, использует настройки для форматирование из formatterApp.
-
-	* 💡 en: 
-
-	*/
-
-	const formattedCodeLinter = ({ code, type = 'finally' }: TFormattedCodeLinter) => {
-		if (type === 'develop') {
-			// Use prettier - Develop
-			// const formattedCode = prettier.format(code, {
-			// 	semi: true,
-			// 	singleQuote: true,
-			// 	trailingComma: 'es5',
-			// 	arrowParens: 'always',
-			// 	parser: 'typescript',
-			// });
-
-			return code;
-
-			// Use eslint - Develop
-			// const linter = new eslint.Linter();
-			// const lintingErrors = linter.verifyAndFix(formattedCode, {
-			// 	parserOptions: {
-			// 		ecmaVersion: 6,
-			// 		sourceType: 'module',
-			// 		ecmaFeatures: {
-			// 			jsx: true,
-			// 		},
-			// 	},
-			// 	rules: {
-			// 		'no-unused-vars': 2,
-			// 	},
-			// });
-
-			// return lintingErrors.output;
-		}
-
-		// Use prettier - Finally
-		// const formattedCode = prettier.format(code, {
-		// 	semi: formatterApp.semi,
-		// 	printWidth: formatterApp.printWidth,
-		// 	tabWidth: formatterApp.tabWidth,
-		// 	useTabs: formatterApp.useTabs,
-		// 	bracketSpacing: formatterApp.bracketSpacing,
-		// 	bracketSameLine: formatterApp.bracketSameLine,
-		// 	jsxBracketSameLine: formatterApp.jsxBracketSameLine,
-		// 	singleQuote: formatterApp.singleQuote,
-		// 	trailingComma: 'es5',
-		// 	arrowParens: 'always',
-		// 	parser: 'babel',
-		// });
-
-		return code;
-
-		// Use eslint - Finally
-		// const linter = new eslint.Linter();
-		// const lintingErrors = linter.verifyAndFix(formattedCode, {
-		// 	parserOptions: {
-		// 		ecmaVersion: 6,
-		// 		sourceType: 'module',
-		// 		ecmaFeatures: {
-		// 			jsx: true,
-		// 		},
-		// 	},
-		// 	rules: {
-		// 		'no-unused-vars': 2,
-		// 	},
-		// });
-
-		// return lintingErrors.output;
+	const copyArray = (arr: any[]) => {
+		return JSON.parse(JSON.stringify(arr));
 	};
 
-	//| ✅ Main Process
+	// const configApp: TConfigApp[] = copyArray(configExtension) || copyArray(baseConfig);
+	const configApp: TConfigApp[] = copyArray(baseConfig);
 
-	/* 
+	const arrTriggerWordImport = ['import ', ' from '];
+	const arrTriggerWordOther = [
+		'export ',
+		'const ',
+		'let ',
+		'var ',
+		'function ',
+		'switch ',
+		'(',
+		' () ',
+		'enum ',
+		'interface ',
+		'new ',
+		'class ',
+		'return ',
+		'true',
+		'false',
+		' = ',
+		' => ',
+		' == ',
+		' != ',
+		' === ',
+		' !== ',
+		...'abcdefghijklmnopqrstuvwxyz'
+			.toLocaleLowerCase()
+			.split('')
+			.map(el => `type ${el}`),
+		...'abcdefghijklmnopqrstuvwxyz'
+			.toLocaleUpperCase()
+			.split('')
+			.map(el => `type ${el}`),
+	];
 
-	* 💡 ru: Переменная, в которой получается отформатированый код и переделанный в одну строку без '\n'.
-	* formattedCodeLinter - форматирование кода.
-	* removeNewLines - переделывает в одну строку без '\n'.
+	const getPartCode = (code: any, type: any) => {
+		if (code.includes('\n')) {
+			const arrCode = code.replace(/;/g, '').replace(/\n/g, ';').split(';');
+			let activeImport = true;
+			let activeId = 0;
 
-	* 💡 en: 
+			copyArray(arrCode).map((el: any, idArr: any) => {
+				arrTriggerWordImport.forEach(wordImport => {
+					arrTriggerWordOther.forEach(wordOther => {
+						if (activeImport && el.includes(wordImport)) {
+							activeId = idArr + 1;
+							activeImport = true;
+						}
+						if (el.includes(wordOther)) {
+							activeImport = false;
+						}
+					});
+				});
+			});
 
-	*/
+			if (type === 'import') {
+				return arrCode.slice(0, activeId).filter((el: any) => el !== '');
+			}
+			return arrCode.slice(activeId).join('\n');
+		}
+		return new Error('code not n');
+	};
 
-	const formattedCodeText = removeNewLines(formattedCodeLinter({ code: text }));
+	// const configExtension = [
+	// 	{
+	// 		importDefault: ['React'],
+	// 		importExport: ['useState'],
+	// 		package: 'react',
+	// 	},
+	// 	{
+	// 		importDefault: [],
+	// 		importExport: ['createStory'],
+	// 		package: 'redux',
+	// 	},
+	// ];
 
-	/* 
+	const removeDuplicates = (arr: any, key: any) => {
+		const seen: any = {};
+		return arr.filter((item: any) => {
+			const k = item[key];
+			return seen.hasOwnProperty(k) ? false : (seen[k] = true);
+		});
+	};
 
-	* 💡 ru: Получение только текст с импортами из файлов.
-	* getCodeImportText - получение импортов из текста файла.
+	const arrayOfLetters = [
+		...'abcdefghijklmnopqrstuvwxyz'.toLocaleLowerCase().split(''),
+		...'abcdefghijklmnopqrstuvwxyz'.toLocaleUpperCase().split(''),
+		...'*$'.split(''),
+	];
 
-	* 💡 en: 
+	const convertImportInStringToObjectImports = (arrImport: any) => {
+		const predResult: any[] = [];
 
-	*/
+		const arrImport_ = copyArray(arrImport);
 
-	codeTextImport = getCodeImportText(formattedCodeText);
+		arrImport_.forEach((elemImport: any) => {
+			predResult.push({
+				importDefault: [],
+				importExport: [],
+				importOnly: false,
+				importType: [],
+				importAll: false,
+				importAsAll: '',
+				package: elemImport.replace('"', "'").match(/'(.*?)'/)[1],
+			});
+		});
 
-	/* 
+		const result = copyArray(removeDuplicates(predResult, 'package'));
 
-	* 💡 ru: Получение основного кода из текста файла - отформатированный и в одну строку.
-	* getCodeMainText - получение основного кода.
-	* formattedCodeLinter - форматирование кода.
-	* removeNewLines - преобразовывает в одну строку, удаляя '\n'.
+		arrImport_.forEach((elemImport: any) => {
+			result.forEach((elemObject: any) => {
+				if (elemImport.replace('"', "'").match(/'(.*?)'/)[1] === elemObject.package) {
+					if (elemImport.includes('import * from ')) {
+						elemObject.importAll = true;
+					}
 
-	* 💡 en: 
+					if (elemImport.includes('import * as ') && elemImport.includes(' from ')) {
+						elemObject.importAsAll = elemImport
+							.replace('import ', '')
+							.slice(0, elemImport.indexOf(' from ') - 7);
+					}
 
-	*/
+					if (
+						elemImport.includes('import type ') &&
+						elemImport.includes(' from ') &&
+						!elemImport.includes('import * ') &&
+						!elemImport.includes('import * as ')
+					) {
+						let exportsArr: any = [];
+						let defaultsArr: any = [];
+						let wordTrigger: any = [];
 
-	codeTextMain = removeNewLines(
-		formattedCodeLinter({ code: getCodeMainText(formattedCodeText) as string }),
-	);
+						let checkWord = true;
+						let checkDefault = true;
+						let activeWordAs = false;
 
-	/* 
+						elemImport
+							.replace('import type ', '')
+							.slice(0, elemImport.indexOf(' from ') - 7)
+							.replace(" from '", '')
+							.split('')
+							.forEach((el: any) => {
+								if (el === '{') {
+									checkDefault = false;
+									activeWordAs = true;
+								}
+								if (el === '}') {
+									if (wordTrigger.length) {
+										if (checkDefault) {
+											defaultsArr.push(wordTrigger.join('').trim());
+										} else {
+											exportsArr.push(wordTrigger.join('').trim());
+										}
+									}
+									wordTrigger = [];
+									checkWord = false;
+									checkDefault = true;
+								}
 
-	* 💡 ru: Переменная хранит массив с пакетами из импортов файла.
-	* getArrayImportPackages - перебирает и возвращает массив с пакетами импорта из файла.
+								if (wordTrigger.join('') == 'from') {
+									wordTrigger = [];
+									checkWord = false;
+								}
 
-	* 💡 en: 
+								if (el === ' ') {
+									if (activeWordAs) {
+										wordTrigger.push(el);
+										checkWord = true;
+									} else {
+										if (wordTrigger.length) {
+											if (checkDefault) {
+												defaultsArr.push(wordTrigger.join('').trim());
+											} else {
+												exportsArr.push(wordTrigger.join('').trim());
+											}
+										}
+										wordTrigger = [];
+										checkWord = false;
+									}
+								}
+								if (el === ',') {
+									if (wordTrigger.length) {
+										if (checkDefault) {
+											defaultsArr.push(wordTrigger.join('').trim());
+										} else {
+											exportsArr.push(wordTrigger.join('').trim());
+										}
+									}
+									wordTrigger = [];
+									checkWord = false;
+								}
+								arrayOfLetters.forEach(word => {
+									if (el === word) {
+										wordTrigger.push(el);
 
-	*/
+										checkWord = true;
+									}
+								});
+							});
+						elemObject.importType = exportsArr;
+					}
 
-	const arrayImportsStr = getArrayImportPackages(codeTextImport);
+					if (
+						elemImport.includes('import ') &&
+						elemImport.includes(' from ') &&
+						!elemImport.includes('import type ') &&
+						!elemImport.includes('import * as ')
+					) {
+						let exportsArr: any = [];
+						let defaultsArr: any = [];
+						let wordTrigger: any = [];
 
-	/* 
+						let checkWord = true;
+						let checkDefault = true;
+						let activeWordAs = false;
 
-	* 💡 ru: Удаление из массива с пакетами импортов дубликаты и передача в основную переменную с импортами.
-	* baseSchemaArrayConfigLocal - удаление дубликатов из массива.
+						elemImport
+							.replace('import ', '')
+							.slice(0, elemImport.indexOf(' from ') - 7)
+							.replace(" from '", '')
+							.split('')
+							.forEach((el: any) => {
+								if (el === '{') {
+									checkDefault = false;
+									activeWordAs = true;
+								}
+								if (el === '}') {
+									if (wordTrigger.length) {
+										if (checkDefault) {
+											defaultsArr.push(wordTrigger.join('').trim());
+										} else {
+											exportsArr.push(wordTrigger.join('').trim());
+										}
+									}
+									wordTrigger = [];
+									checkWord = false;
+									checkDefault = true;
+								}
 
-	* 💡 en: 
+								if (wordTrigger.join('') == 'type') {
+									wordTrigger = [];
+									checkWord = false;
+								}
 
-	*/
+								if (wordTrigger.join('') == 'from') {
+									wordTrigger = [];
+									checkWord = false;
+								}
 
-	configDataFile = baseSchemaArrayConfigLocal(arrayImportsStr);
+								if (el === ' ') {
+									if (activeWordAs) {
+										wordTrigger.push(el);
+										checkWord = true;
+									} else {
+										if (wordTrigger.length) {
+											if (checkDefault) {
+												defaultsArr.push(wordTrigger.join('').trim());
+											} else {
+												exportsArr.push(wordTrigger.join('').trim());
+											}
+										}
+										wordTrigger = [];
+										checkWord = false;
+									}
+								}
+								if (el === ',') {
+									if (wordTrigger.length) {
+										if (checkDefault) {
+											defaultsArr.push(wordTrigger.join('').trim());
+										} else {
+											exportsArr.push(wordTrigger.join('').trim());
+										}
+									}
+									wordTrigger = [];
+									checkWord = false;
+								}
+								arrayOfLetters.forEach(word => {
+									if (el === word) {
+										wordTrigger.push(el);
 
-	/* 
+										checkWord = true;
+									}
+								});
+							});
+						elemObject.importDefault = defaultsArr;
+						elemObject.importExport = exportsArr;
+					}
 
-	* 💡 ru: Преобразование текста с импортами в массив с данными об импортах.
-	* gettingOnlyStringImports - возвращает массив из строк импорта.
-	* stringCodeToObject - преобразовывает строки импортов в объект с данными об импорте.
+					if (
+						elemImport.includes('import ') &&
+						!elemImport.includes(' from ') &&
+						!elemImport.includes('import type ')
+					) {
+						elemObject.importOnly = true;
+					}
+				}
+			});
+		});
 
-	* 💡 en: 
+		return result;
+	};
 
-	*/
+	const codeImportsFile = getPartCode(code, 'import')
+		.join('')
+		.replace(/^\s+|\s+$|\s+(?=\s)/g, '')
+		.replace(/import/g, '; import')
+		.split('; ')
+		.filter((el: any) => el !== '');
 
-	configDataFile = arrImportToObjectImport(
-		gettingOnlyStringImports(codeTextImport),
-		configDataFile,
-	);
+	const codeMainFile = getPartCode(code, 'main');
 
-	/* 
+	const arrImportsObject = convertImportInStringToObjectImports(codeImportsFile);
 
-	* 💡 ru: Перебор значений в массиве конфигурационных данных из основной части кода, на наличия элементов в массиве импортов.
-	* removeUnusedArray - проверяет, если ли в текст нужное слово
+	const connectImportsFileWithConfigImports = (arrImports: any, arrConfig: any) => {
+		const arrImports_ = copyArray(arrImports);
+		const arrConfig_ = copyArray(arrConfig);
 
-	* 💡 en: 
+		arrImports_.forEach((elemImport: any) => {
+			arrConfig_.forEach((elemConfig: any) => {
+				if (elemImport.package === elemConfig.package) {
+					elemImport.importDefault = [
+						...new Set([...elemImport.importDefault, ...elemConfig.importDefault]),
+					];
+					elemImport.importExport = [
+						...new Set([...elemImport.importExport, ...elemConfig.importExport]),
+					];
+				} else {
+					arrImports_.push({
+						importDefault: elemConfig.importDefault || [],
+						importExport: elemConfig.importExport || [],
+						importOnly: false,
+						importType: [],
+						importAll: false,
+						importAsAll: '',
+						package: elemConfig.package,
+					});
+				}
+			});
+		});
 
-	*/
+		return removeDuplicates(arrImports_, 'package');
+	};
 
-	configApp.forEach(el => {
-		el.triggerExport = removeUnusedArray(codeTextMain, el.triggerExport);
-		el.triggerDefault = removeUnusedArray(codeTextMain, el.triggerDefault);
-	});
+	const allArrayImports = connectImportsFileWithConfigImports(arrImportsObject, configApp);
 
-	/* 
+	const removeUnusedArray = (text: any, triggerArr: any) => {
+		if (triggerArr.length) {
+			return triggerArr.filter((word: any) => {
+				if (word.includes(' as ')) {
+					return text.includes(word.split(' as ')[1]);
+				}
+				return text.includes(word);
+			});
+		}
+		return triggerArr;
+	};
 
-	* 💡 ru: Перебор значений в массиве импортов файла из основной части кода, на наличия элементов в массиве импортов.
-	* removeUnusedArray - проверяет, если ли в текст нужное слово
+	const checkHaveImportInMainCode = (codeMain: any, arrImports: any) => {
+		const arrImports_ = copyArray(arrImports);
 
-	* 💡 en: 
+		if (arrImports_.length) {
+			arrImports_.forEach((elemImport: any) => {
+				elemImport.importExport = removeUnusedArray(codeMain, elemImport.importExport);
+				elemImport.importDefault = removeUnusedArray(codeMain, elemImport.importDefault);
+				elemImport.importType = removeUnusedArray(codeMain, elemImport.importType);
+			});
+		}
 
-	*/
+		return arrImports_.filter((elemImport: any) => {
+			if (
+				!(
+					elemImport.importDefault.length === 0 &&
+					elemImport.importExport.length === 0 &&
+					elemImport.importOnly === false &&
+					elemImport.importType.length === 0 &&
+					elemImport.importAll === false &&
+					elemImport.importAsAll === ''
+				)
+			) {
+				return elemImport;
+			}
+		});
+	};
 
-	configDataFile.forEach(el => {
-		el.triggerExport = removeUnusedArray(codeTextMain, el.triggerExport);
-		el.triggerDefault = removeUnusedArray(codeTextMain, el.triggerDefault);
-	});
+	const arrImportsResult = checkHaveImportInMainCode(codeMainFile, allArrayImports);
 
-	/* 
+	const convertImportsArrObjectToArrStringImport = (arrImports: any[]) => {
+		const result: any[] = [];
+		const arrImports_ = copyArray(arrImports);
 
-	* 💡 ru: Соединение массивов конфига и файла.
-	* joinArraysByPackage - используя массивы сравнивание и соединяет массивы ( массив конфига и массив полученный из файла )
+		arrImports_.forEach((elemImport: any) => {
+			if (elemImport.importOnly) {
+				result.push(`import '${elemImport.package}'`);
+			}
+			if (elemImport.importAll) {
+				result.push(`import * from '${elemImport.package}'`);
+			}
+			if (elemImport.importAsAll) {
+				result.push(`import ${elemImport.importAsAll} from '${elemImport.package}'`);
+			}
+			if (elemImport.importType.length) {
+				result.push(
+					`import type { ${elemImport.importType.join(', ')} } from '${elemImport.package}'`,
+				);
+			}
+			if (elemImport.importDefault.length && elemImport.importExport.length) {
+				result.push(
+					`import ${
+						elemImport.importDefault.length < 1
+							? elemImport.importDefault.join(', ')
+							: `${elemImport.importDefault[0]}, `
+					}{ ${elemImport.importExport.join(', ')} } from '${elemImport.package}'`,
+				);
+			} else if (elemImport.importDefault.length) {
+				result.push(`import ${elemImport.importDefault.join(', ')} from '${elemImport.package}'`);
+			} else if (elemImport.importExport.length) {
+				result.push(
+					`import { ${elemImport.importExport.join(', ')} } from '${elemImport.package}'`,
+				);
+			}
+		});
 
-	* 💡 en: 
+		return result;
+	};
 
-	*/
+	const sortImportsArray = (arrImports: any) => {
+		const result = [];
+		let count = 0;
+		copyArray(arrImports).forEach((elemImport: any) => {
+			if (
+				elemImport.includes('import ') &&
+				elemImport.includes(' from ') &&
+				!elemImport.includes('import type ') &&
+				!elemImport.includes('import * as ') &&
+				!elemImport.includes('import * ')
+			) {
+				result.push(elemImport);
+				count += 1;
+			}
+		});
 
-	configDataFile = joinArraysConfigAndImportFile(configApp, configDataFile);
+		if (count) {
+			result.push('');
+			count = 0;
+		}
 
-	/* 
+		copyArray(arrImports).forEach((elemImport: any) => {
+			if (elemImport.includes('import type ')) {
+				result.push(elemImport);
+				count += 1;
+			}
+		});
 
-	* 💡 ru: Переменная с конвертированными импортами в строку.
-	* convertCode - преобразование импортов из массива в строку.
+		if (count) {
+			result.push('');
+			count = 0;
+		}
 
-	* 💡 en: 
+		copyArray(arrImports).forEach((elemImport: any) => {
+			if (elemImport.includes('import * from ')) {
+				result.push(elemImport);
+				count += 1;
+			}
+		});
 
-	*/
+		if (count) {
+			result.push('');
+			count = 0;
+		}
 
-	const result = convertCode(configDataFile);
+		copyArray(arrImports).forEach((elemImport: any) => {
+			if (elemImport.includes('import * as ')) {
+				result.push(elemImport);
+				count += 1;
+			}
+		});
 
-	/* 
+		if (count) {
+			result.push('');
+			count = 0;
+		}
 
-	* 💡 ru: Финальный результат 
-	* result - переменная с итоговыми импортами 
-	* formattingMainCode - получение основного кода из файла пользователя.
-	* formattedCodeLinter - форматирование кода с финальным типом ( дополнительные параметры для форматирование )
+		copyArray(arrImports).forEach((elemImport: any) => {
+			if (
+				elemImport.includes('import ') &&
+				!elemImport.includes(' from ') &&
+				!elemImport.includes('import type ') &&
+				!elemImport.includes('import * as ') &&
+				!elemImport.includes('import * ')
+			) {
+				result.push(elemImport);
+				count += 1;
+			}
+		});
 
-	* 💡 en: 
+		return result;
+	};
 
-	*/
+	const finallyCode = (arrImports: any, codeMain: any) => {
+		const result = sortImportsArray(
+			convertImportsArrObjectToArrStringImport(copyArray(arrImports)),
+		);
 
-	return `${result}\n\n${formattedCodeLinter({
-		code: formattingMainCode(text),
-		type: 'finally',
-	}).trim()}`;
+		return `${result.join('\n')}${codeMain.split('\n')[0] === '' ? '\n' : ''}${codeMain}`;
+	};
+
+	const result = finallyCode(arrImportsResult, codeMainFile);
+
+	return result;
 };
-
-//| Export
-
-export * from './array';
-export * from './other';
-export * from './text';
-export * from './constant';
-export * from './types';

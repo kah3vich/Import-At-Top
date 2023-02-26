@@ -58,7 +58,7 @@ const getPartCode = (code, type) => {
 		if (type === 'import') {
 			return arrCode.slice(0, activeId).filter(el => el !== '');
 		}
-		return arrCode.slice(activeId).filter(el => el !== '');
+		return arrCode.slice(activeId).join('\n');
 	}
 	return new Error('code not n');
 };
@@ -104,9 +104,9 @@ import { Calculate } from './events';
 import homeIcon from '../images/menu/home.png';
 import { canMakePaymentGooglePay } from './googlePay';
 
-let confirmCreateNewOrder = true;
-let tooltipsterReady = false;
-let scrollListener = false;
+let confirmCreateNewOrder = Old;
+let tooltipsterReady = NotReact;
+let scrollListener = route;
 
 
 `;
@@ -115,20 +115,12 @@ const configExtension = [
 	{
 		importDefault: ['React'],
 		importExport: ['useState'],
-		importOnly: false,
-		importType: [],
-		importAll: false,
-		importAsAll: '',
 		package: 'react',
 	},
 	{
 		importDefault: [],
 		importExport: ['createStory'],
-		importOnly: false,
-		importType: [],
-		importAll: false,
-		importAsAll: '',
-		package: 'react',
+		package: 'redux',
 	},
 ];
 
@@ -149,7 +141,9 @@ const arrayOfLetters = [
 const convertImportInStringToObjectImports = arrImport => {
 	const predResult = [];
 
-	arrImport.forEach(elemImport => {
+	const arrImport_ = copyArray(arrImport);
+
+	arrImport_.forEach(elemImport => {
 		predResult.push({
 			importDefault: [],
 			importExport: [],
@@ -163,7 +157,7 @@ const convertImportInStringToObjectImports = arrImport => {
 
 	const result = copyArray(removeDuplicates(predResult, 'package'));
 
-	arrImport.forEach(elemImport => {
+	arrImport_.forEach(elemImport => {
 		result.forEach(elemObject => {
 			if (elemImport.replace('"', "'").match(/'(.*?)'/)[1] === elemObject.package) {
 				if (elemImport.includes('import * from ')) {
@@ -367,8 +361,177 @@ const codeMainFile = getPartCode(code, 'main');
 
 const arrImportsObject = convertImportInStringToObjectImports(codeImportsFile);
 
-const connectImportsFileWithConfigImports = (arrImports, arrConfig) => {};
+const connectImportsFileWithConfigImports = (arrImports, arrConfig) => {
+	const arrImports_ = copyArray(arrImports);
+	const arrConfig_ = copyArray(arrConfig);
+
+	arrImports_.forEach(elemImport => {
+		arrConfig_.forEach(elemConfig => {
+			if (elemImport.package === elemConfig.package) {
+				elemImport.importDefault = [
+					...new Set([...elemImport.importDefault, ...elemConfig.importDefault]),
+				];
+				elemImport.importExport = [
+					...new Set([...elemImport.importExport, ...elemConfig.importExport]),
+				];
+			} else {
+				arrImports_.push({
+					importDefault: elemConfig.importDefault || [],
+					importExport: elemConfig.importExport || [],
+					importOnly: false,
+					importType: [],
+					importAll: false,
+					importAsAll: '',
+					package: elemConfig.package,
+				});
+			}
+		});
+	});
+
+	return removeDuplicates(arrImports_, 'package');
+};
 
 const allArrayImports = connectImportsFileWithConfigImports(arrImportsObject, configExtension);
 
-console.log('✅ arrImportsObject    ', arrImportsObject);
+const removeUnusedArray = (text, triggerArr) => {
+	if (triggerArr.length) {
+		return triggerArr.filter(word => {
+			if (word.includes(' as ')) {
+				return text.includes(word.split(' as ')[1]);
+			}
+			return text.includes(word);
+		});
+	}
+	return triggerArr;
+};
+
+const checkHaveImportInMainCode = (codeMain, arrImports) => {
+	const arrImports_ = copyArray(arrImports);
+
+	if (arrImports_.length) {
+		arrImports_.forEach(elemImport => {
+			elemImport.importExport = removeUnusedArray(codeMain, elemImport.importExport);
+			elemImport.importDefault = removeUnusedArray(codeMain, elemImport.importDefault);
+			elemImport.importType = removeUnusedArray(codeMain, elemImport.importType);
+		});
+	}
+
+	return arrImports_.filter(elemImport => {
+		if (
+			!(
+				elemImport.importDefault.length === 0 &&
+				elemImport.importExport.length === 0 &&
+				elemImport.importOnly === false &&
+				elemImport.importType.length === 0 &&
+				elemImport.importAll === false &&
+				elemImport.importAsAll === ''
+			)
+		) {
+			return elemImport;
+		}
+	});
+};
+
+const arrImportsResult = checkHaveImportInMainCode(codeMainFile, allArrayImports);
+
+const convertImportsArrObjectToArrStringImport = arrImports => {
+	const result = [];
+	const arrImports_ = copyArray(arrImports);
+
+	arrImports_.forEach(elemImport => {
+		if (elemImport.importOnly) {
+			result.push(`import '${elemImport.package}'`);
+		}
+		if (elemImport.importAll) {
+			result.push(`import * from '${elemImport.package}'`);
+		}
+		if (elemImport.importAsAll) {
+			result.push(`import ${elemImport.importAsAll} from '${elemImport.package}'`);
+		}
+		if (elemImport.importType.length) {
+			result.push(
+				`import type { ${elemImport.importType.join(', ')} } from '${elemImport.package}'`,
+			);
+		}
+		if (elemImport.importDefault.length && elemImport.importExport.length) {
+			result.push(
+				`import ${
+					elemImport.importDefault.length < 1
+						? elemImport.importDefault.join(', ')
+						: `${elemImport.importDefault[0]}, `
+				}{ ${elemImport.importExport.join(', ')} } from '${elemImport.package}'`,
+			);
+		} else if (elemImport.importDefault.length) {
+			result.push(`import ${elemImport.importDefault.join(', ')} from '${elemImport.package}'`);
+		} else if (elemImport.importExport.length) {
+			result.push(`import { ${elemImport.importExport.join(', ')} } from '${elemImport.package}'`);
+		}
+	});
+
+	return result;
+};
+
+const sortImportsArray = arrImports => {
+	const result = [];
+	copyArray(arrImports).forEach(elemImport => {
+		if (
+			elemImport.includes('import ') &&
+			elemImport.includes(' from ') &&
+			!elemImport.includes('import type ') &&
+			!elemImport.includes('import * as ') &&
+			!elemImport.includes('import * ')
+		) {
+			result.push(elemImport);
+		}
+	});
+
+	result.push('');
+
+	copyArray(arrImports).forEach(elemImport => {
+		if (elemImport.includes('import type ')) {
+			result.push(elemImport);
+		}
+	});
+
+	result.push('');
+
+	copyArray(arrImports).forEach(elemImport => {
+		if (elemImport.includes('import * from ')) {
+			result.push(elemImport);
+		}
+	});
+
+	result.push('');
+
+	copyArray(arrImports).forEach(elemImport => {
+		if (elemImport.includes('import * as ')) {
+			result.push(elemImport);
+		}
+	});
+
+	result.push('');
+
+	copyArray(arrImports).forEach(elemImport => {
+		if (
+			elemImport.includes('import ') &&
+			!elemImport.includes(' from ') &&
+			!elemImport.includes('import type ') &&
+			!elemImport.includes('import * as ') &&
+			!elemImport.includes('import * ')
+		) {
+			result.push(elemImport);
+		}
+	});
+
+	return result;
+};
+
+const finallyCode = (arrImports, codeMain) => {
+	const result = sortImportsArray(convertImportsArrObjectToArrStringImport(copyArray(arrImports)));
+
+	return `${result.join('\n')}\n\n${codeMain}`;
+};
+
+const result = finallyCode(arrImportsResult, codeMainFile);
+
+console.log('✅ result    ', result);
