@@ -32,20 +32,6 @@
 		"configuration": {
 			"title": "✅ Import At Top",
 			"properties": {
-				"import-at-top.formatter": {
-					"type": "object",
-					"description": "✅ Formatter params - Import At Top",
-					"default": {
-						"printWidth": 120,
-						"tabWidth": 4,
-						"useTabs": true,
-						"semi": true,
-						"bracketSpacing": true,
-						"bracketSameLine": false,
-						"jsxBracketSameLine": false,
-						"singleQuote": true
-					}
-				},
 				"import-at-top.config": {
 					"type": "array",
 					"description": "✅ Config params - Import At Top",

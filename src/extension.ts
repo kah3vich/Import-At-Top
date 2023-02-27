@@ -13,10 +13,6 @@ export const activate = (context: vscode.ExtensionContext) => {
 		const documentText = document.getText();
 		const configExtension: any = vscode.workspace.getConfiguration('import-at-top').get('config');
 
-		const formatterConfigExtension: any = vscode.workspace
-			.getConfiguration('import-at-top')
-			.get('formatter');
-
 		try {
 			const result = ImportAtTop(documentText, configExtension);
 

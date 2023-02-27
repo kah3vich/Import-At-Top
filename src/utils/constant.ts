@@ -1,14 +1,13 @@
-import type { TConfigApp, TFormatterApp } from './types';
+import type { TConfigParams } from './types';
 
 /* 
 
 * 💡 ru: 
 
-* 💡 en: 
-
+* 💡 en:  
 */
 
-export const baseConfig: TConfigApp[] = [
+export const baseConfig: TConfigParams[] = [
 	{
 		importDefault: ['React'],
 		importExport: [
@@ -31,25 +30,6 @@ export const baseConfig: TConfigApp[] = [
 		package: 'redux',
 	},
 ];
-
-/* 
-
-* 💡 ru: 
-
-* 💡 en: 
-
-*/
-
-export const baseFormatter: TFormatterApp = {
-	printWidth: 120,
-	tabWidth: 4,
-	useTabs: true,
-	semi: true,
-	bracketSpacing: true,
-	bracketSameLine: false,
-	jsxBracketSameLine: false,
-	singleQuote: true,
-};
 
 /* 
 

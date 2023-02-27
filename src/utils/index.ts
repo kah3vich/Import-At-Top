@@ -1,4 +1,4 @@
-import type { TConfigApp } from './types';
+import type { TConfigParams, TImportElement } from './types';
 import { baseConfig } from './constant';
 
 /* 
@@ -9,7 +9,7 @@ import { baseConfig } from './constant';
 
 */
 
-export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
+export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 	//| ✅ Variable
 
 	const copyArray = (arr: any[]) => {
@@ -17,10 +17,10 @@ export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
 	};
 
 	// const configApp: TConfigApp[] = copyArray(configExtension) || copyArray(baseConfig);
-	const configApp: TConfigApp[] = copyArray(baseConfig);
+	const configApp: TConfigParams[] = copyArray(baseConfig);
 
-	const arrTriggerWordImport = ['import ', ' from '];
-	const arrTriggerWordOther = [
+	const arrTriggerWordImport: string[] = ['import ', ' from '];
+	const arrTriggerWordOther: string[] = [
 		'export ',
 		'const ',
 		'let ',
@@ -52,13 +52,13 @@ export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
 			.map(el => `type ${el}`),
 	];
 
-	const getPartCode = (code: any, type: any) => {
+	const getPartCode = (code: string, type: 'import' | 'main'): any => {
 		if (code.includes('\n')) {
-			const arrCode = code.replace(/;/g, '').replace(/\n/g, ';').split(';');
-			let activeImport = true;
-			let activeId = 0;
+			const arrCode: string[] = code.replace(/;/g, '').replace(/\n/g, ';').split(';');
+			let activeImport: boolean = true;
+			let activeId: number = 0;
 
-			copyArray(arrCode).map((el: any, idArr: any) => {
+			copyArray(arrCode).map((el: string, idArr: number) => {
 				arrTriggerWordImport.forEach(wordImport => {
 					arrTriggerWordOther.forEach(wordOther => {
 						if (activeImport && el.includes(wordImport)) {
@@ -80,22 +80,11 @@ export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
 		return new Error('code not n');
 	};
 
-	// const configExtension = [
-	// 	{
-	// 		importDefault: ['React'],
-	// 		importExport: ['useState'],
-	// 		package: 'react',
-	// 	},
-	// 	{
-	// 		importDefault: [],
-	// 		importExport: ['createStory'],
-	// 		package: 'redux',
-	// 	},
-	// ];
+	console.log('✅ getPartCode    ', getPartCode);
 
-	const removeDuplicates = (arr: any, key: any) => {
+	const removeDuplicates = (arr: any[], key: string) => {
 		const seen: any = {};
-		return arr.filter((item: any) => {
+		return arr.filter(item => {
 			const k = item[key];
 			return seen.hasOwnProperty(k) ? false : (seen[k] = true);
 		});
@@ -107,10 +96,10 @@ export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
 		...'*$'.split(''),
 	];
 
-	const convertImportInStringToObjectImports = (arrImport: any) => {
-		const predResult: any[] = [];
+	const convertImportInStringToObjectImports = (arrImport: string[]) => {
+		const predResult: TImportElement[] = [];
 
-		const arrImport_ = copyArray(arrImport);
+		const arrImport_: string[] = copyArray(arrImport);
 
 		arrImport_.forEach((elemImport: any) => {
 			predResult.push({
@@ -124,7 +113,11 @@ export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
 			});
 		});
 
+		console.log('✅ arrImport_    ', arrImport_);
+
 		const result = copyArray(removeDuplicates(predResult, 'package'));
+
+		console.log('✅ result    ', result);
 
 		arrImport_.forEach((elemImport: any) => {
 			result.forEach((elemObject: any) => {
@@ -235,10 +228,12 @@ export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
 
 						elemImport
 							.replace('import ', '')
-							.slice(0, elemImport.indexOf(' from ') - 7)
+							.slice(0, elemImport.indexOf(' from ') - ' from '.length)
 							.replace(" from '", '')
 							.split('')
 							.forEach((el: any) => {
+								console.log('✅ el    ', el);
+
 								if (el === '{') {
 									checkDefault = false;
 									activeWordAs = true;
@@ -302,6 +297,8 @@ export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
 								});
 							});
 						elemObject.importDefault = defaultsArr;
+						console.log('✅ defaultsArr    ', defaultsArr);
+
 						elemObject.importExport = exportsArr;
 					}
 
@@ -328,7 +325,11 @@ export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
 
 	const codeMainFile = getPartCode(code, 'main');
 
+	console.log('✅ codeMainFile    ', codeMainFile);
+
 	const arrImportsObject = convertImportInStringToObjectImports(codeImportsFile);
+
+	console.log('✅ arrImportsObject    ', arrImportsObject);
 
 	const connectImportsFileWithConfigImports = (arrImports: any, arrConfig: any) => {
 		const arrImports_ = copyArray(arrImports);
@@ -361,6 +362,8 @@ export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
 	};
 
 	const allArrayImports = connectImportsFileWithConfigImports(arrImportsObject, configApp);
+
+	console.log('✅ allArrayImports    ', allArrayImports);
 
 	const removeUnusedArray = (text: any, triggerArr: any) => {
 		if (triggerArr.length) {
@@ -402,6 +405,8 @@ export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
 	};
 
 	const arrImportsResult = checkHaveImportInMainCode(codeMainFile, allArrayImports);
+
+	console.log('✅ arrImportsResult    ', arrImportsResult);
 
 	const convertImportsArrObjectToArrStringImport = (arrImports: any[]) => {
 		const result: any[] = [];
@@ -520,10 +525,12 @@ export const ImportAtTop = (code: string, configExtension: TConfigApp[]) => {
 			convertImportsArrObjectToArrStringImport(copyArray(arrImports)),
 		);
 
-		return `${result.join('\n')}\n${codeMain}`;
+		return `${result.join('\n')}${codeMain.split('\n')[0] === '\r' ? '' : '\n'}${codeMain}`;
 	};
 
 	const result = finallyCode(arrImportsResult, codeMainFile);
+
+	console.log('✅ result    ', result);
 
 	return result;
 };

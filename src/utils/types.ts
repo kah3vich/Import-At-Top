@@ -1,21 +1,15 @@
-export type TConfigApp = {
+export type TConfigParams = {
 	importDefault: string[];
 	importExport: string[];
 	package: string;
 };
 
-export type TFormatterApp = {
-	printWidth: number;
-	tabWidth: number;
-	useTabs: boolean;
-	semi: boolean;
-	bracketSpacing: boolean;
-	bracketSameLine: boolean;
-	jsxBracketSameLine: boolean;
-	singleQuote: boolean;
-};
-
-export type TFormattedCodeLinter = {
-	code: string;
-	type?: 'develop' | 'finally';
+export type TImportElement = {
+	importDefault: string[];
+	importExport: string[];
+	importOnly: boolean;
+	importType: string[];
+	importAll: boolean;
+	importAsAll: string;
+	package: string;
 };
