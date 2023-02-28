@@ -577,13 +577,21 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 	const reductionCodeImport = (text: any) => {
 		const result = [];
 
-		if (!(text.length > 80 && text.includes('{') && text.includes('}'))) {
+		if (
+			!(
+				text.includes('{') &&
+				text.includes('}') &&
+				text.slice(text.indexOf('{') + 1, text.indexOf('}')).length > 50
+			)
+		) {
 			return text;
 		}
 
 		console.log();
 
 		result.push(text.slice(0, text.indexOf('{') + 1).trim());
+		console.log('✅ text    ', text);
+
 		result.push(
 			...text
 				.slice(text.indexOf('{') + 1, text.indexOf('}') - 1)
@@ -604,12 +612,16 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		);
 
 		result.forEach((el: any, i: any) => {
-			if (el.length > 80) {
+			if (
+				el.includes('{') &&
+				el.includes('}') &&
+				el.slice(el.indexOf('{') + 1, el.indexOf('}')).length > 50
+			) {
 				result[i] = [...reductionCodeImport(el)] as any;
 			}
 		});
 
-		console.log('✅ result    ', result);
+		console.log('✅ result  111  ', result);
 
 		return `${[].concat(...result).join('\n')}${
 			codeMain.split('\n')[0] === '\r' ? '' : '\n'
