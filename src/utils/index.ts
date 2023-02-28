@@ -93,7 +93,7 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 	const arrayOfLetters = [
 		...'abcdefghijklmnopqrstuvwxyz'.toLocaleLowerCase().split(''),
 		...'abcdefghijklmnopqrstuvwxyz'.toLocaleUpperCase().split(''),
-		...'*$'.split(''),
+		...'*$_1234567890'.split(''),
 	];
 
 	const convertImportInStringToObjectImports = (arrImport: string[]) => {
@@ -249,6 +249,7 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 									wordTrigger = [];
 									checkWord = false;
 									checkDefault = true;
+									activeWordAs = false;
 								}
 
 								if (wordTrigger.join('') == 'type') {
@@ -296,10 +297,15 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 									}
 								});
 							});
-						elemObject.importDefault = defaultsArr;
+						if (defaultsArr.length) {
+							elemObject.importDefault.push(...defaultsArr);
+						}
 						console.log('✅ defaultsArr    ', defaultsArr);
 
-						elemObject.importExport = exportsArr;
+						if (exportsArr.length) {
+							elemObject.importExport.push(...exportsArr);
+						}
+						console.log('✅ exportsArr    ', exportsArr);
 					}
 
 					if (
@@ -323,6 +329,8 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		.split('; ')
 		.filter((el: any) => el !== '');
 
+	console.log('✅ codeImportsFile    ', codeImportsFile);
+
 	const codeMainFile = getPartCode(code, 'main');
 
 	console.log('✅ codeMainFile    ', codeMainFile);
@@ -331,9 +339,44 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 
 	console.log('✅ arrImportsObject    ', arrImportsObject);
 
-	const connectImportsFileWithConfigImports = (arrImports: any, arrConfig: any) => {
-		const arrImports_ = copyArray(arrImports);
+	const checkTriggerImportConfigInMainCode = (importsFile: any, arrConfig: any) => {
 		const arrConfig_ = copyArray(arrConfig);
+		const importsFile_ = copyArray(importsFile);
+
+		arrConfig_.forEach((el: any) => {
+			let result: any[] = [];
+			el.importDefault.forEach((importDef: any) => {
+				if (!importsFile_.join('; ').includes(importDef)) {
+					result.push(importDef);
+				}
+			});
+
+			el.importDefault = result;
+
+			result = [];
+
+			el.importExport.forEach((importExp: any) => {
+				if (!importsFile_.join('; ').includes(importExp)) {
+					result.push(importExp);
+				}
+			});
+
+			el.importExport = result;
+		});
+
+		return arrConfig_;
+	};
+
+	const connectImportsFileWithConfigImports = (
+		codeImportsFile: any,
+		arrImports: any,
+		arrConfig: any,
+	) => {
+		const arrImports_ = copyArray(arrImports);
+		console.log('✅ arrImports_    ', arrImports_);
+
+		const arrConfig_ = copyArray(checkTriggerImportConfigInMainCode(codeImportsFile, arrConfig));
+		console.log('✅ arrConfig_    ', arrConfig_);
 
 		arrImports_.forEach((elemImport: any) => {
 			arrConfig_.forEach((elemConfig: any) => {
@@ -361,7 +404,11 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		return removeDuplicates(arrImports_, 'package');
 	};
 
-	const allArrayImports = connectImportsFileWithConfigImports(arrImportsObject, configApp);
+	const allArrayImports = connectImportsFileWithConfigImports(
+		codeImportsFile,
+		arrImportsObject,
+		configApp,
+	);
 
 	console.log('✅ allArrayImports    ', allArrayImports);
 
@@ -369,9 +416,11 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		if (triggerArr.length) {
 			return triggerArr.filter((word: any) => {
 				if (word.includes(' as ')) {
-					return text.includes(word.split(' as ')[1]);
+					return (
+						text.includes(word.split(' as ')[1]) && !text.includes(`.${word.split(' as ')[1]}`)
+					);
 				}
-				return text.includes(word);
+				return text.includes(word) && !text.includes(`.${word}`);
 			});
 		}
 		return triggerArr;
@@ -517,15 +566,54 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 			}
 		});
 
+		if (count) {
+			result.push('');
+			count = 0;
+		}
+
+		return result;
+	};
+
+	const reductionCodeImport = (text: any) => {
+		const result = [];
+
+		if (!(text.length > 80 && text.includes('{') && text.includes('}'))) {
+			return text;
+		}
+
+		console.log();
+
+		result.push(text.slice(0, text.indexOf('{') + 1).trim());
+		result.push(
+			...text
+				.slice(text.indexOf('{') + 1, text.indexOf('}') - 1)
+				.trim()
+				.split(', ')
+				.map((el: any) => `    ${el},`),
+		);
+		result.push(text.slice(text.indexOf('}') - 1).trim());
+
+		console.log('✅ result    ', result);
+
 		return result;
 	};
 
 	const finallyCode = (arrImports: any, codeMain: any) => {
-		const result = sortImportsArray(
+		const result: any = sortImportsArray(
 			convertImportsArrObjectToArrStringImport(copyArray(arrImports)),
 		);
 
-		return `${result.join('\n')}${codeMain.split('\n')[0] === '\r' ? '' : '\n'}${codeMain}`;
+		result.forEach((el: any, i: any) => {
+			if (el.length > 80) {
+				result[i] = [...reductionCodeImport(el)] as any;
+			}
+		});
+
+		console.log('✅ result    ', result);
+
+		return `${[].concat(...result).join('\n')}${
+			codeMain.split('\n')[0] === '\r' ? '' : '\n'
+		}${codeMain}`;
 	};
 
 	const result = finallyCode(arrImportsResult, codeMainFile);

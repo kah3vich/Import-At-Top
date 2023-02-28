@@ -30,7 +30,6 @@ export const baseConfig: TConfigParams[] = [
 		package: 'redux',
 	},
 ];
-
 /* 
 
 * 💡 ru: 
@@ -42,5 +41,5 @@ export const baseConfig: TConfigParams[] = [
 export const arrayOfLetters: string[] = [
 	...'abcdefghijklmnopqrstuvwxyz'.toLocaleLowerCase().split(''),
 	...'abcdefghijklmnopqrstuvwxyz'.toLocaleUpperCase().split(''),
-	...'*',
+	...'*_1234567890',
 ];
