@@ -32,14 +32,11 @@ const _ImportAtTop = ({ data }: TImportAtTopProps & TUser) => {
 
 export const ImportAtTop = React.memo(_ImportAtTop);`;
 
-export const testComponentCodeEnd = `import React, { useState, State, useEffect } from 'react'
-import { TUser } from './types'
-import { Svg as Component, Svgs as Svg } from '../../icon.svg'
+export const testComponentCodeEnd = `import React, { useState, State } from 'react'
 
 import * as validator from './ZipCodeValidator'
 
 import './styles.css'
-
 
 export type TImportAtTopProps = {
 	data: string,

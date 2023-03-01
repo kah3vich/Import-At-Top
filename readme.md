@@ -10,7 +10,7 @@
     </a>
 </h1>
 
-> :warning: **This extension is in beta testing.**
+> :warning: **This extension is in beta testing. If you find a bug please report it - holdesher@ro.ru**
 
 <h4 align="center">An extension that adds imports to the source file from the specified options in the configuration file, and also sorts and removes unnecessary imports, which improves and speeds up the user experience.</h4>
 

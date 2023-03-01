@@ -80,10 +80,12 @@
 	"license": "Import At Top License",
 	"author": {
 		"name": "kah3vich",
-		"url": "https://github.com/kah3vich"
+		"url": "https://github.com/kah3vich",
+		"email": "holdesher@ro.ru"
 	},
 	"bugs": {
-		"url": "https://github.com/kah3vich/Import-At-Top/issues"
+		"url": "https://github.com/kah3vich/Import-At-Top/issues",
+		"email": "holdesher@ro.ru"
 	},
 	"keywords": [
 		"import",

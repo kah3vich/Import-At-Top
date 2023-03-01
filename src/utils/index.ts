@@ -413,17 +413,28 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 	console.log('✅ allArrayImports    ', allArrayImports);
 
 	const removeUnusedArray = (text: any, triggerArr: any) => {
-		if (triggerArr.length) {
-			return triggerArr.filter((word: any) => {
-				if (word.includes(' as ')) {
-					return (
-						text.includes(word.split(' as ')[1]) && !text.includes(`.${word.split(' as ')[1]}`)
-					);
+		const result: any = [];
+
+		triggerArr.forEach((word: any) => {
+			text.split('\n').forEach((el: any) => {
+				if (el.includes(word)) {
+					if (
+						el.includes(` ${word} `) ||
+						el.includes(` ${word}.`) ||
+						el.includes(`=${word}.`) ||
+						el.includes(` ${word}(`) ||
+						el.includes(` ${word}=`) ||
+						el.includes(`<${word} `) ||
+						el.includes(`<${word}>`) ||
+						el.includes(` ${word}<`)
+					) {
+						result.push(word);
+					}
 				}
-				return text.includes(word) && !text.includes(`.${word}`);
 			});
-		}
-		return triggerArr;
+		});
+
+		return [...new Set(result)];
 	};
 
 	const checkHaveImportInMainCode = (codeMain: any, arrImports: any) => {
@@ -565,11 +576,6 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 				count += 1;
 			}
 		});
-
-		if (count) {
-			result.push('');
-			count = 0;
-		}
 
 		return result;
 	};
