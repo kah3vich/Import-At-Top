@@ -426,6 +426,8 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 						el.includes(` ${word}=`) ||
 						el.includes(`<${word} `) ||
 						el.includes(`<${word}>`) ||
+						el.includes(`(${word})`) ||
+						el.includes(` ${word}:`) ||
 						el.includes(` ${word}<`)
 					) {
 						result.push(word);

@@ -57,3 +57,9 @@ const _ImportAtTop = ({ data }: TImportAtTopProps & TUser) => {
 }
 
 export const ImportAtTop = React.memo(_ImportAtTop)`;
+
+export const codeMain = `
+
+import React from 'react'
+
+`;

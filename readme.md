@@ -4,15 +4,11 @@
         <img src="https://raw.githubusercontent.com/kah3vich/Import-At-Top/master/assets/logo.png" alt="logo" width="256">
         <br/>
         <br/>
-        Import At Top (Beta)
+        Import At Top (React)
         <br/>
         <br/>
     </a>
 </h1>
-
-> :warning: **This extension is in beta testing. If you find a bug please report it - holdesher@ro.ru**
-
-<h4 align="center">React an extension that adds imports to the source file from the specified options in the configuration file, and also sorts and removes unnecessary imports, which improves and speeds up the user experience.</h4>
 
 <br/>
 
@@ -30,6 +26,33 @@
         <img src="https://vsmarketplacebadges.dev/downloads-short/kah3vich.import-at-top.svg?style=for-the-badge&colorA=252526&colorB=43A047&label=Downloads" alt="Downloads">
     </a>
 </p>
+
+<br/>
+
+> :warning: **This extension is in beta testing. If you find a bug please report it - holdesher@ro.ru**
+
+<h4 align="center">React an extension that adds imports to the source file from the specified options in the configuration file, and also sorts and removes unnecessary imports, which improves and speeds up the user experience.</h4>
+
+<br/>
+
+<table align="center">
+    <tr>
+        <td align="center" width="96">
+            <a href="#">
+                <img src="https://raw.githubusercontent.com/kah3vich/kah3vich/main/assets/img/react.png" width="48" height="48" alt="React" />
+            </a>
+            <br />
+            <p>React</p>
+        </td>
+        <td align="center" width="96">
+            <a href="#">
+                <img src="https://raw.githubusercontent.com/kah3vich/kah3vich/main/assets/img/javascript.png" width="48" height="48" alt="JavaScript" />
+            </a>
+            <br />
+            <p>JavaScript</p>
+        </td>
+    </tr>
+</table>
 
 <br/>
 
