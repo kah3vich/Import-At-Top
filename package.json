@@ -1,7 +1,7 @@
 {
 	"name": "import-at-top",
 	"publisher": "kah3vich",
-	"displayName": "Import At Top (Beta)",
+	"displayName": "Import At Top (React)",
 	"description": "An extension that adds imports to the source file from the specified options in the configuration file, and also sorts and removes unnecessary imports, which improves and speeds up the user experience.",
 	"repository": {
 		"type": "git",

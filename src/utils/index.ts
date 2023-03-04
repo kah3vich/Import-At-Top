@@ -16,8 +16,9 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		return JSON.parse(JSON.stringify(arr));
 	};
 
-	// const configApp: TConfigApp[] = copyArray(configExtension) || copyArray(baseConfig);
-	const configApp: TConfigParams[] = copyArray(baseConfig);
+	const configApp: TConfigParams[] = copyArray(configExtension) || copyArray(baseConfig);
+	// const configApp: TConfigParams[] = copyArray(baseConfig);
+	console.log('✅ configApp    ', configApp);
 
 	const arrTriggerWordImport: string[] = ['import ', ' from '];
 	const arrTriggerWordOther: string[] = [
@@ -55,6 +56,7 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 	const getPartCode = (code: string, type: 'import' | 'main'): any => {
 		if (code.includes('\n')) {
 			const arrCode: string[] = code.replace(/;/g, '').replace(/\n/g, ';').split(';');
+			const arrCodeMain: string[] = code.split('\n');
 			let activeImport: boolean = true;
 			let activeId: number = 0;
 
@@ -75,7 +77,7 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 			if (type === 'import') {
 				return arrCode.slice(0, activeId).filter((el: any) => el !== '');
 			}
-			return arrCode.slice(activeId).join('\n');
+			return arrCodeMain.slice(activeId).join('\n');
 		}
 		return new Error('code not n');
 	};
@@ -345,23 +347,30 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 
 		arrConfig_.forEach((el: any) => {
 			let result: any[] = [];
-			el.importDefault.forEach((importDef: any) => {
-				if (!importsFile_.join('; ').includes(importDef)) {
-					result.push(importDef);
-				}
-			});
+
+			if (el.importDefault.length) {
+				el.importDefault.forEach((importDef: any) => {
+					if (!importsFile_.join('; ').includes(importDef)) {
+						result.push(importDef);
+					}
+				});
+			}
 
 			el.importDefault = result;
 
 			result = [];
 
-			el.importExport.forEach((importExp: any) => {
-				if (!importsFile_.join('; ').includes(importExp)) {
-					result.push(importExp);
-				}
-			});
+			if (el.importExport.length) {
+				el.importExport.forEach((importExp: any) => {
+					if (!importsFile_.join('; ').includes(importExp)) {
+						result.push(importExp);
+					}
+				});
+			}
 
 			el.importExport = result;
+
+			//! Error config
 		});
 
 		return arrConfig_;
@@ -415,25 +424,61 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 	const removeUnusedArray = (text: any, triggerArr: any) => {
 		const result: any = [];
 
-		triggerArr.forEach((word: any) => {
-			text.split('\n').forEach((el: any) => {
-				if (el.includes(word)) {
-					if (
-						el.includes(` ${word} `) ||
-						el.includes(` ${word}.`) ||
-						el.includes(`=${word}.`) ||
-						el.includes(` ${word}(`) ||
-						el.includes(` ${word}=`) ||
-						el.includes(`<${word} `) ||
-						el.includes(`<${word}>`) ||
-						el.includes(`(${word})`) ||
-						el.includes(` ${word}:`) ||
-						el.includes(` ${word}<`)
-					) {
-						result.push(word);
-					}
+		//! fix
+
+		const arr = [
+			...'abcdefghijklmnopqrstuvwxyz'.toLocaleLowerCase().split(''),
+			...'abcdefghijklmnopqrstuvwxyz'.toLocaleUpperCase().split(''),
+			...'1234567890_$@~'.split(''),
+		];
+
+		const arrLeft = ['.'];
+
+		const test = (elem: any, _word: string) => {
+			let active = true;
+			const arrLeft_ = [...arr, ...arrLeft];
+			console.log('✅ arrLeft_    ', arrLeft_);
+
+			arrLeft_.forEach(el => {
+				console.log('✅ `${el}${_word}`    ', `${el}${_word}`);
+				console.log('✅ result.includes(`${el}${_word}`)    ', elem.includes(`${el}${_word}`));
+
+				if (elem.includes(`${el}${_word}`)) {
+					active = false;
 				}
 			});
+
+			arr.forEach(el => {
+				if (elem.includes(`${_word}${el}`)) {
+					active = false;
+				}
+			});
+
+			console.log('✅ _word    ', _word);
+			console.log('✅ active    ', active);
+
+			return active;
+		};
+
+		triggerArr.forEach((word: any) => {
+			if (word.includes(' as ')) {
+				const word_ = word.split(' as ')[1];
+				text.split('\n').forEach((el: any) => {
+					if (el.includes(word_)) {
+						if (test(el, word_)) {
+							result.push(word);
+						}
+					}
+				});
+			} else {
+				text.split('\n').forEach((el: any) => {
+					if (el.includes(word)) {
+						if (test(el, word)) {
+							result.push(word);
+						}
+					}
+				});
+			}
 		});
 
 		return [...new Set(result)];
@@ -579,6 +624,11 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 			}
 		});
 
+		if (count) {
+			result.push('');
+			count = 0;
+		}
+
 		return result;
 	};
 
@@ -614,6 +664,20 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		return result;
 	};
 
+	function removeEmptyAndStop(array: any) {
+		let result = [];
+		let checked = false;
+		for (let i = 0; i < array.length; i++) {
+			if ((array[i] === '' || array[i] === '\r') && !checked) {
+				continue;
+			} else {
+				checked = true;
+				result.push(array[i]);
+			}
+		}
+		return result;
+	}
+
 	const finallyCode = (arrImports: any, codeMain: any) => {
 		const result: any = sortImportsArray(
 			convertImportsArrObjectToArrStringImport(copyArray(arrImports)),
@@ -631,9 +695,10 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 
 		console.log('✅ result  111  ', result);
 
-		return `${[].concat(...result).join('\n')}${
-			codeMain.split('\n')[0] === '\r' ? '' : '\n'
-		}${codeMain}`;
+		return `${[]
+			.concat(...result)
+			.map((el: any) => (el.includes(' from ') || el.includes("import '") ? `${el};` : el))
+			.join('\n')}\n${removeEmptyAndStop(codeMain.split('\n')).join('\n')}`;
 	};
 
 	const result = finallyCode(arrImportsResult, codeMainFile);

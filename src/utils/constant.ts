@@ -18,6 +18,7 @@ export const baseConfig: TConfigParams[] = [
 			'useCallback',
 			'useMemo',
 			'useRef',
+			'useId',
 			'useImperativeHandle',
 			'useLayoutEffect',
 			'useDebugValue',
