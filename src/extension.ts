@@ -8,7 +8,7 @@ let statusBar: vscode.StatusBarItem;
 export const activate = (context: vscode.ExtensionContext) => {
 	// const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
 
-	statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -1000);
+	statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -8);
 	statusBar.command = 'import-at-top';
 	statusBar.name = '⌛ Import At Top';
 	statusBar.text = '⌛ Import At Top';
@@ -24,12 +24,75 @@ export const activate = (context: vscode.ExtensionContext) => {
 			return;
 		}
 
+		const currentlyOpenTabfilePath = vscode.window.activeTextEditor
+			? vscode.window.activeTextEditor.document.fileName
+			: '';
+
+		const checkedFormatFile = (str: string) => {
+			const arrFormat = ['js', 'ts', 'tsx', 'jsx'];
+			let check = false;
+
+			arrFormat.forEach(format => {
+				if (str.split('.')[1] === format) {
+					check = true;
+				}
+			});
+
+			return check;
+		};
+
+		if (!checkedFormatFile(currentlyOpenTabfilePath)) {
+			return new Error('Error format file');
+		}
+
+		console.log('✅ currentlyOpenTabfilePath    ', currentlyOpenTabfilePath);
+
 		const document = editor.document;
 		const documentText = document.getText();
 		const configExtension: any = vscode.workspace.getConfiguration('import-at-top').get('config');
 
+		function checkArrayConfig(arr: any[]) {
+			const expectedKeys: any = ['importDefault', 'importExport', 'package'];
+			let check = true;
+			for (const obj of arr) {
+				for (const key in obj) {
+					if (!expectedKeys.includes(key)) {
+						check = false;
+					}
+					if (key === 'importDefault' || key === 'importExport') {
+						if (!Array.isArray(obj[key])) {
+							check = false;
+						}
+						for (const item of obj[key]) {
+							if (typeof item !== 'string') {
+								check = false;
+							}
+						}
+					}
+					if (key === 'package') {
+						if (typeof obj[key] !== 'string') {
+							check = false;
+						}
+					}
+				}
+			}
+			return check;
+		}
+
+		if (!checkArrayConfig(configExtension)) {
+			vscode.window.showInformationMessage(`❌ Import At Top: ${'Config err'}`);
+
+			statusBar.text = '❌ Import At Top';
+			setTimeout(() => {
+				statusBar.text = '⌛ Import At Top';
+			}, 1000);
+			consoleLog(`- Import At Top ${'Config err'}`, 'err');
+			return;
+		}
+
 		try {
 			const result = ImportAtTop(documentText, configExtension);
+			// const result = documentText;
 
 			statusBar.text = '✅ Import At Top';
 			setTimeout(() => {

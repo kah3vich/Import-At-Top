@@ -17,6 +17,7 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 	};
 
 	const configApp: TConfigParams[] = copyArray(configExtension) || copyArray(baseConfig);
+
 	// const configApp: TConfigParams[] = copyArray(baseConfig);
 	console.log('✅ configApp    ', configApp);
 
@@ -426,7 +427,7 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 
 		//! fix
 
-		const arr = [
+		const arrRight = [
 			...'abcdefghijklmnopqrstuvwxyz'.toLocaleLowerCase().split(''),
 			...'abcdefghijklmnopqrstuvwxyz'.toLocaleUpperCase().split(''),
 			...'1234567890_$@~'.split(''),
@@ -434,9 +435,11 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 
 		const arrLeft = ['.'];
 
+		const arrCenter = ['"', "'"];
+
 		const test = (elem: any, _word: string) => {
 			let active = true;
-			const arrLeft_ = [...arr, ...arrLeft];
+			const arrLeft_ = [...arrRight, ...arrLeft];
 			console.log('✅ arrLeft_    ', arrLeft_);
 
 			arrLeft_.forEach(el => {
@@ -448,8 +451,14 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 				}
 			});
 
-			arr.forEach(el => {
+			arrRight.forEach(el => {
 				if (elem.includes(`${_word}${el}`)) {
+					active = false;
+				}
+			});
+
+			arrCenter.forEach(el => {
+				if (elem.includes(`${el}${_word}${el}`)) {
 					active = false;
 				}
 			});

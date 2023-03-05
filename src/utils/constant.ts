@@ -26,7 +26,7 @@ export const baseConfig: TConfigParams[] = [
 		package: 'react',
 	},
 	{
-		importDefault: ['Redux'],
+		importDefault: [],
 		importExport: ['createStore'],
 		package: 'redux',
 	},
@@ -44,3 +44,13 @@ export const arrayOfLetters: string[] = [
 	...'abcdefghijklmnopqrstuvwxyz'.toLocaleUpperCase().split(''),
 	...'*_1234567890',
 ];
+
+export const allVersionImports = `
+import './styles.css';
+import React from 'react';
+import { useState } from 'react';
+import React, { useState } from 'react';
+import * as Babel from 'babe';
+import { Svg as Component, Svgs as Svg } from 'svg';
+import type { TUser } from './types';
+`;

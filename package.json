@@ -103,7 +103,7 @@
 	],
 	"homepage": "https://github.com/kah3vich/Import-At-Top/readme.md",
 	"scripts": {
-		"build": "rm -rf out/ & vsce package",
+		"build": "rm -rf out/ & rm -rf *.vsix & vsce package",
 		"vscode:prepublish": "tsc -p ./",
 		"watcher": "tsc -watch -p ./",
 		"test": "rm -rf out/ & clear & jest --config ./jest.config.js",
