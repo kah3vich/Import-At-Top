@@ -42,8 +42,16 @@
 							],
 							"importExport": [
 								"useState",
+								"useEffect",
+								"useContext",
+								"useReducer",
+								"useCallback",
+								"useMemo",
+								"useRef",
 								"useId",
-								"useRef"
+								"useImperativeHandle",
+								"useLayoutEffect",
+								"useDebugValue"
 							],
 							"package": "react"
 						},
