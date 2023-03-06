@@ -422,6 +422,50 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 
 	console.log('✅ allArrayImports    ', allArrayImports);
 
+	const checkingPresenceElementInText = (text: any, word: any) => {
+		//! fix
+
+		const arrRight = [
+			...'abcdefghijklmnopqrstuvwxyz'.toLocaleLowerCase().split(''),
+			...'abcdefghijklmnopqrstuvwxyz'.toLocaleUpperCase().split(''),
+			...'1234567890_$@~'.split(''),
+		];
+
+		const arrLeft = ['.'];
+
+		let result: boolean = false;
+
+		const test = (elem: any, _word: string) => {
+			let active = true;
+			const arrLeft_ = [...arrRight, ...arrLeft];
+			console.log('✅ arrLeft_    ', arrLeft_);
+
+			arrLeft_.forEach(el => {
+				if (elem.includes(`${el}${_word}`)) {
+					active = false;
+				}
+			});
+
+			arrRight.forEach(el => {
+				if (elem.includes(`${_word}${el}`)) {
+					active = false;
+				}
+			});
+
+			return active;
+		};
+
+		text.split('\n').forEach((el: any) => {
+			if (el.includes(word.replace('* as ', ''))) {
+				if (test(el, word.replace('* as ', ''))) {
+					result = true;
+				}
+			}
+		});
+
+		return result ? word : '';
+	};
+
 	const removeUnusedArray = (text: any, triggerArr: any) => {
 		const result: any = [];
 
@@ -435,16 +479,14 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 
 		const arrLeft = ['.'];
 
-		const arrCenter = ['"', "'"];
-
 		const test = (elem: any, _word: string) => {
 			let active = true;
 			const arrLeft_ = [...arrRight, ...arrLeft];
 			console.log('✅ arrLeft_    ', arrLeft_);
 
 			arrLeft_.forEach(el => {
-				console.log('✅ `${el}${_word}`    ', `${el}${_word}`);
-				console.log('✅ result.includes(`${el}${_word}`)    ', elem.includes(`${el}${_word}`));
+				// console.log('✅ `${el}${_word}`    ', `${el}${_word}`);
+				// console.log('✅ result.includes(`${el}${_word}`)    ', elem.includes(`${el}${_word}`));
 
 				if (elem.includes(`${el}${_word}`)) {
 					active = false;
@@ -456,15 +498,6 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 					active = false;
 				}
 			});
-
-			arrCenter.forEach(el => {
-				if (elem.includes(`${el}${_word}${el}`)) {
-					active = false;
-				}
-			});
-
-			console.log('✅ _word    ', _word);
-			console.log('✅ active    ', active);
 
 			return active;
 		};
@@ -501,6 +534,7 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 				elemImport.importExport = removeUnusedArray(codeMain, elemImport.importExport);
 				elemImport.importDefault = removeUnusedArray(codeMain, elemImport.importDefault);
 				elemImport.importType = removeUnusedArray(codeMain, elemImport.importType);
+				elemImport.importAsAll = checkingPresenceElementInText(codeMain, elemImport.importAsAll);
 			});
 		}
 

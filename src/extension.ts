@@ -28,23 +28,6 @@ export const activate = (context: vscode.ExtensionContext) => {
 			? vscode.window.activeTextEditor.document.fileName
 			: '';
 
-		// const checkedFormatFile = (str: string) => {
-		// 	const arrFormat = ['js', 'ts', 'tsx', 'jsx'];
-		// 	let check = false;
-
-		// 	arrFormat.forEach(format => {
-		// 		if (str.split('.')[1] === format) {
-		// 			check = true;
-		// 		}
-		// 	});
-
-		// 	return check;
-		// };
-
-		// if (!checkedFormatFile(currentlyOpenTabfilePath)) {
-		// 	return new Error('Error format file');
-		// }
-
 		console.log('✅ currentlyOpenTabfilePath    ', currentlyOpenTabfilePath);
 
 		const document = editor.document;
