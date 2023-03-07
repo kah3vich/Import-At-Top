@@ -54,6 +54,18 @@
     </tr>
 </table>
 
+<p>
+
+### The main advantages of using the extension:
+
+- #### Speed up work with imports
+- #### Flexible configuration of the imports you need to work with it
+- #### Check for existing import elements in code
+- #### Breaking imports into parts and sorting
+- #### Formatting imports
+
+</p>
+
 <br/>
 
 ## KeyBoard
