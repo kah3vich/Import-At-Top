@@ -12,7 +12,9 @@
 		"vscode": "^1.60.0"
 	},
 	"extensionPack": [
-		"kah3vich.nanosnippets"
+		"kah3vich.nanosnippets",
+		"kah3vich.refactor",
+		"kah3vich.holdesher"
 	],
 	"categories": [
 		"Extension Packs",
