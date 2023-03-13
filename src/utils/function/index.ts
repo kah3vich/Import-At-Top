@@ -1,5 +1,5 @@
-import { arrOfSymbols, arrTriggerWordImport, arrTriggerWordOther } from '@utils/constant';
-import type { TImportElement } from '@utils/types';
+import { arrOfSymbols, arrTriggerWordImport, arrTriggerWordOther } from '../constant';
+import type { TImportElement } from '../types';
 
 export const copyArray = <T>(arr: T[]): T[] => {
 	return JSON.parse(JSON.stringify(arr));
