@@ -27,30 +27,48 @@ export const baseConfig: TConfigParams[] = [
 	},
 	{
 		importDefault: [],
-		importExport: ['createStore'],
-		package: 'redux',
+		importExport: ['Get'],
+		package: '@nestjs/common',
 	},
 ];
-/* 
 
-* 💡 ru: 
-
-* 💡 en: 
-
-*/
-
-export const arrayOfLetters: string[] = [
+export const arrOfSymbols: string[] = [
 	...'abcdefghijklmnopqrstuvwxyz'.toLocaleLowerCase().split(''),
 	...'abcdefghijklmnopqrstuvwxyz'.toLocaleUpperCase().split(''),
-	...'*_1234567890',
+	...'*$_1234567890'.split(''),
 ];
 
-export const allVersionImports = `
-import './styles.css';
-import React from 'react';
-import { useState } from 'react';
-import React, { useState } from 'react';
-import * as Babel from 'babe';
-import { Svg as Component, Svgs as Svg } from 'svg';
-import type { TUser } from './types';
-`;
+export const arrTriggerWordImport: string[] = ['import ', ' from '];
+
+export const arrTriggerWordOther: string[] = [
+	'export ',
+	'const ',
+	'let ',
+	'var ',
+	'function ',
+	'switch ',
+	'(',
+	' () ',
+	'enum ',
+	'interface ',
+	'new ',
+	'class ',
+	'return ',
+	'true',
+	'false',
+	'@',
+	' = ',
+	' => ',
+	' == ',
+	' != ',
+	' === ',
+	' !== ',
+	...'abcdefghijklmnopqrstuvwxyz'
+		.toLocaleLowerCase()
+		.split('')
+		.map(el => `type ${el}`),
+	...'abcdefghijklmnopqrstuvwxyz'
+		.toLocaleUpperCase()
+		.split('')
+		.map(el => `type ${el}`),
+];
