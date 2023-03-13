@@ -13,10 +13,7 @@
 		"isolatedModules": true,
 		"baseUrl": ".",
 		"noFallthroughCasesInSwitch": true,
-		"outDir": "out",
-		"paths": {
-			"@utils/*": ["src/utils/*"]
-		}
+		"outDir": "out"
 	},
 	"compileOnSave": true,
 	"include": ["."],
