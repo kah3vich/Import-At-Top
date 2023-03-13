@@ -27,7 +27,7 @@ export const baseConfig: TConfigParams[] = [
 	},
 	{
 		importDefault: [],
-		importExport: ['Get'],
+		importExport: ['Get', 'Post'],
 		package: '@nestjs/common',
 	},
 ];

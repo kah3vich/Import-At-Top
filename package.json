@@ -12,7 +12,9 @@
 		"vscode": "^1.60.0"
 	},
 	"extensionPack": [
-		"kah3vich.nanosnippets"
+		"kah3vich.nanosnippets",
+		"kah3vich.nano-refactor",
+		"kah3vich.holdesher"
 	],
 	"categories": [
 		"Extension Packs",
@@ -23,8 +25,8 @@
 	],
 	"preview": false,
 	"galleryBanner": {
-		"color": "#ffffff",
-		"theme": "light"
+		"color": "#20232A",
+		"theme": "dark"
 	},
 	"main": "./out/src/extension.js",
 	"browser": "./out/src/extension.js",
@@ -58,9 +60,10 @@
 						{
 							"importDefault": [],
 							"importExport": [
-								"createStore"
+								"Get",
+								"Post"
 							],
-							"package": "redux"
+							"package": "@nestjs/common"
 						}
 					]
 				}
