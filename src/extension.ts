@@ -12,6 +12,7 @@ export const activate = (context: vscode.ExtensionContext) => {
 	statusBar.command = 'import-at-top';
 	statusBar.name = '⌛ Import At Top';
 	statusBar.text = '⌛ Import At Top';
+	statusBar.backgroundColor = 'transparent';
 	context.subscriptions.push(statusBar);
 	statusBar.show();
 
@@ -24,11 +25,23 @@ export const activate = (context: vscode.ExtensionContext) => {
 			return;
 		}
 
-		const currentlyOpenTabfilePath = vscode.window.activeTextEditor
-			? vscode.window.activeTextEditor.document.fileName
-			: '';
+		const checkFormatFile = (vscode: any) => {
+			const currentlyOpenTabfilePath = vscode.window.activeTextEditor
+				? vscode.window.activeTextEditor.document.fileName
+				: '';
 
-		console.log('✅ currentlyOpenTabfilePath    ', currentlyOpenTabfilePath);
+			const arrFormat = ['js', 'ts', 'tsx', 'jsx'];
+
+			let result = false;
+
+			arrFormat.forEach((format: string) => {
+				if (currentlyOpenTabfilePath.slice(4).split('.')[1] === format) {
+					result = true;
+				}
+			});
+
+			return result;
+		};
 
 		const document = editor.document;
 		const documentText = document.getText();
@@ -66,10 +79,25 @@ export const activate = (context: vscode.ExtensionContext) => {
 			vscode.window.showInformationMessage(`❌ Import At Top: ${'Config err'}`);
 
 			statusBar.text = '❌ Import At Top';
+			statusBar.backgroundColor = 'red';
 			setTimeout(() => {
 				statusBar.text = '⌛ Import At Top';
+				statusBar.backgroundColor = 'transparent';
 			}, 1000);
 			consoleLog(`- Import At Top ${'Config err'}`, 'err');
+			return;
+		}
+
+		if (!checkFormatFile(vscode)) {
+			vscode.window.showInformationMessage(`❌ Import At Top: ${'Format file err'}`);
+
+			statusBar.text = '❌ Import At Top';
+			statusBar.backgroundColor = 'red';
+			setTimeout(() => {
+				statusBar.text = '⌛ Import At Top';
+				statusBar.backgroundColor = 'transparent';
+			}, 1000);
+			consoleLog(`- Import At Top ${'Format file  err'}`, 'err');
 			return;
 		}
 
@@ -78,8 +106,10 @@ export const activate = (context: vscode.ExtensionContext) => {
 			// const result = documentText;
 
 			statusBar.text = '✅ Import At Top';
+			statusBar.backgroundColor = 'green';
 			setTimeout(() => {
 				statusBar.text = '⌛ Import At Top';
+				statusBar.backgroundColor = 'transparent';
 			}, 1000);
 
 			// showNotification('✅ - Import At Top');
@@ -96,8 +126,10 @@ export const activate = (context: vscode.ExtensionContext) => {
 			vscode.window.showInformationMessage(`❌ Import At Top: ${Error}`);
 
 			statusBar.text = '❌ Import At Top';
+			statusBar.backgroundColor = 'red';
 			setTimeout(() => {
 				statusBar.text = '⌛ Import At Top';
+				statusBar.backgroundColor = 'transparent';
 			}, 1000);
 			consoleLog(`- Import At Top ${Error}`, 'err');
 		}
