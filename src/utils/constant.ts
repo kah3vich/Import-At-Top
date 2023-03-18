@@ -1,7 +1,6 @@
 import type { TConfigParams } from './types';
 
 /* 
-
 * 💡 ru: 
 
 * 💡 en:  
@@ -32,13 +31,31 @@ export const baseConfig: TConfigParams[] = [
 	},
 ];
 
+/* 
+* 💡 ru: 
+
+* 💡 en:  
+*/
+
 export const arrOfSymbols: string[] = [
 	...'abcdefghijklmnopqrstuvwxyz'.toLocaleLowerCase().split(''),
 	...'abcdefghijklmnopqrstuvwxyz'.toLocaleUpperCase().split(''),
 	...'*$_1234567890'.split(''),
 ];
 
+/* 
+* 💡 ru: 
+
+* 💡 en:  
+*/
+
 export const arrTriggerWordImport: string[] = ['import ', ' from '];
+
+/* 
+* 💡 ru: 
+
+* 💡 en:  
+*/
 
 export const arrTriggerWordOther: string[] = [
 	'export ',

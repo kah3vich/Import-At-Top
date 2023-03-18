@@ -10,15 +10,28 @@ import {
 
 import type { TConfigParams } from './types';
 
-/*
- * 💡 ru: Основная функцию для выполнение - Авто импорта
- * 💡 en:
- */
+/* 
+* 💡 ru: 
+
+* 💡 en:  
+*/
 
 export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 	//| ✅ Variable
 
+	/* 
+	* 💡 ru: 
+
+	* 💡 en:  
+	*/
+
 	const configApp: TConfigParams[] = copyArray(configExtension) || copyArray(baseConfig);
+
+	/* 
+	* 💡 ru: 
+
+	* 💡 en:  
+	*/
 
 	const codeImportsFile = getPartCode({
 		code: code,
@@ -30,7 +43,13 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		.replace(/^\s+|\s+$|\s+(?=\s)/g, '')
 		.replace(/import/g, '; import')
 		.split('; ')
-		.filter((el: any) => el !== '');
+		.filter((el: string) => el !== '');
+
+	/* 
+	* 💡 ru: 
+
+	* 💡 en:  
+	*/
 
 	const codeMainFile = getPartCode({
 		code: code,
@@ -39,7 +58,19 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		arrTriggerWordOther: arrTriggerWordOther,
 	});
 
+	/* 
+	* 💡 ru: 
+
+	* 💡 en:  
+	*/
+
 	const arrImportsObject = convertImportInStringToObjectImports(codeImportsFile, arrOfSymbols);
+
+	/* 
+	* 💡 ru: 
+
+	* 💡 en:  
+	*/
 
 	const allArrayImports = connectImportsFileWithConfigImports(
 		codeImportsFile,
@@ -47,9 +78,19 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		configApp,
 	);
 
+	/* 
+	* 💡 ru: 
+
+	* 💡 en:  
+	*/
+
 	const arrImportsResult = checkHaveImportInMainCode(codeMainFile, allArrayImports);
 
-	// console.log('✅ arrImportsResult    ', arrImportsResult);
+	/* 
+	* 💡 ru: 
+
+	* 💡 en:  
+	*/
 
 	const result = finallyCode(arrImportsResult, codeMainFile);
 

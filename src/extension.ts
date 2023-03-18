@@ -1,121 +1,136 @@
 import { ImportAtTop } from './utils';
-import { consoleLog } from './utils/other';
+import {
+	checkArrayConfig,
+	checkFormatFile,
+	statusBarAccept,
+	statusBarError,
+	statusBarInit,
+	statusBarPending,
+} from './utils/function';
+import { TConfigParams } from './utils/types';
 
 import * as vscode from 'vscode';
 
-let statusBar: vscode.StatusBarItem;
+/* 
+* 💡 ru: 
+
+* 💡 en:  
+*/
 
 export const activate = (context: vscode.ExtensionContext) => {
-	// const statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right);
+	/* 
+	* 💡 ru: 
 
-	statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, -8);
-	statusBar.command = 'import-at-top';
-	statusBar.name = '⌛ Import At Top';
-	statusBar.text = '⌛ Import At Top';
-	statusBar.backgroundColor = 'transparent';
-	context.subscriptions.push(statusBar);
-	statusBar.show();
+	* 💡 en:  
+	*/
 
-	// statusBar.text = '⌛ Import At Top';
-	// statusBar.show();
+	const statusBar: vscode.StatusBarItem = vscode.window.createStatusBarItem(
+		vscode.StatusBarAlignment.Right,
+		-8,
+	);
+
+	/* 
+	* 💡 ru: 
+
+	* 💡 en:  
+	*/
+
+	statusBarInit({
+		context,
+		statusBar,
+	});
+
+	/* 
+	* 💡 ru: 
+
+	* 💡 en:  
+	*/
 
 	const disposable = vscode.commands.registerCommand('import-at-top', () => {
+		/* 
+		* 💡 ru: 
+
+		* 💡 en:  
+		*/
 		const editor = vscode.window.activeTextEditor;
+
 		if (!editor) {
 			return;
 		}
 
-		const checkFormatFile = (vscode: any) => {
-			const currentlyOpenTabfilePath = vscode.window.activeTextEditor
-				? vscode.window.activeTextEditor.document.fileName
-				: '';
+		/* 
+		* 💡 ru: 
 
-			const arrFormat = ['js', 'ts', 'tsx', 'jsx'];
-
-			let result = false;
-
-			arrFormat.forEach((format: string) => {
-				if (currentlyOpenTabfilePath.slice(4).split('.')[1] === format) {
-					result = true;
-				}
-			});
-
-			return result;
-		};
+		* 💡 en:  
+		*/
 
 		const document = editor.document;
 		const documentText = document.getText();
-		const configExtension: any = vscode.workspace.getConfiguration('import-at-top').get('config');
 
-		function checkArrayConfig(arr: any[]) {
-			const expectedKeys: any = ['importDefault', 'importExport', 'package'];
-			let check = true;
-			for (const obj of arr) {
-				for (const key in obj) {
-					if (!expectedKeys.includes(key)) {
-						check = false;
-					}
-					if (key === 'importDefault' || key === 'importExport') {
-						if (!Array.isArray(obj[key])) {
-							check = false;
-						}
-						for (const item of obj[key]) {
-							if (typeof item !== 'string') {
-								check = false;
-							}
-						}
-					}
-					if (key === 'package') {
-						if (typeof obj[key] !== 'string') {
-							check = false;
-						}
-					}
-				}
-			}
-			return check;
-		}
+		/* 
+		* 💡 ru: 
 
-		if (!checkArrayConfig(configExtension)) {
-			vscode.window.showInformationMessage(`❌ Import At Top: ${'Config err'}`);
+		* 💡 en:  
+		*/
 
-			statusBar.text = '❌ Import At Top';
-			statusBar.backgroundColor = 'red';
-			setTimeout(() => {
-				statusBar.text = '⌛ Import At Top';
-				statusBar.backgroundColor = 'transparent';
-			}, 1000);
-			consoleLog(`- Import At Top ${'Config err'}`, 'err');
+		const configExtension: TConfigParams[] | undefined = vscode.workspace
+			.getConfiguration('import-at-top')
+			.get('config');
+
+		/* 
+		* 💡 ru: 
+
+		* 💡 en:  
+		*/
+
+		if (!checkArrayConfig(configExtension || [])) {
+			statusBarError({
+				vscode,
+				statusBar,
+				message: 'The config user has a syntax error (importDefault|importExport|package).',
+			});
+
+			statusBarPending({ statusBar });
+
 			return;
 		}
+
+		/* 
+		* 💡 ru: 
+
+		* 💡 en:  
+		*/
 
 		if (!checkFormatFile(vscode)) {
-			vscode.window.showInformationMessage(`❌ Import At Top: ${'Format file err'}`);
+			statusBarError({
+				vscode,
+				statusBar,
+				message: 'The file format is not suitable for the given extension (js|ts|jsx|tsx).',
+			});
 
-			statusBar.text = '❌ Import At Top';
-			statusBar.backgroundColor = 'red';
-			setTimeout(() => {
-				statusBar.text = '⌛ Import At Top';
-				statusBar.backgroundColor = 'transparent';
-			}, 1000);
-			consoleLog(`- Import At Top ${'Format file  err'}`, 'err');
+			statusBarPending({ statusBar });
+
 			return;
 		}
 
+		/* 
+		* 💡 ru: 
+
+		* 💡 en:  
+		*/
+
 		try {
-			const result = ImportAtTop(documentText, configExtension);
-			// const result = documentText;
+			const result = ImportAtTop(documentText, configExtension || []);
+			statusBarAccept({ statusBar });
 
-			statusBar.text = '✅ Import At Top';
-			statusBar.backgroundColor = 'green';
-			setTimeout(() => {
-				statusBar.text = '⌛ Import At Top';
-				statusBar.backgroundColor = 'transparent';
-			}, 1000);
+			statusBarPending({ statusBar });
 
-			// showNotification('✅ - Import At Top');
+			/* 
+			* 💡 ru: 
 
-			// vscode.window.showInformationMessage('✅ - Import At Top');
-			consoleLog(`- Import At Top`, 'log');
+			* 💡 en:  
+			*/
+
 			editor.edit(editBuilder => {
 				editBuilder.replace(
 					new vscode.Range(document.positionAt(0), document.positionAt(documentText.length)),
@@ -123,18 +138,21 @@ export const activate = (context: vscode.ExtensionContext) => {
 				);
 			});
 		} catch (Error) {
-			vscode.window.showInformationMessage(`❌ Import At Top: ${Error}`);
+			statusBarError({ vscode, statusBar, message: `${Error}` });
 
-			statusBar.text = '❌ Import At Top';
-			statusBar.backgroundColor = 'red';
-			setTimeout(() => {
-				statusBar.text = '⌛ Import At Top';
-				statusBar.backgroundColor = 'transparent';
-			}, 1000);
-			consoleLog(`- Import At Top ${Error}`, 'err');
+			statusBarPending({ statusBar });
 		}
+
 		context.subscriptions.push(disposable);
 	});
 };
 
-export const deactivate = () => {};
+/* 
+* 💡 ru: 
+
+* 💡 en:  
+*/
+
+export const deactivate = () => {
+	console.log('🌠 deactivate');
+};

@@ -1,12 +1,10 @@
-/*
+/* 
+* 💡 ru: 
 
-* 💡 ru:
-
-* 💡 en:
-
+* 💡 en:  
 */
 
-export const testComponentCodeStart = `import React, { useState, State, useEffect } from 'react';
+export const testComponentCodeStart: string = `import React, { useState, State, useEffect } from 'react';
 import type { TUser } from './types';
 import * as validator from './ZipCodeValidator';
 import { Svg as Component, Svgs as Svg } from '../../icon.svg';
@@ -32,7 +30,13 @@ const _ImportAtTop = ({ data }: TImportAtTopProps & TUser) => {
 
 export const ImportAtTop = React.memo(_ImportAtTop);`;
 
-export const testComponentCodeEnd = `import React, { useState, State, useEffect, useId } from 'react';
+/* 
+* 💡 ru: 
+
+* 💡 en:  
+*/
+
+export const testComponentCodeEnd: string = `import React, { useState, State, useEffect, useId } from 'react';
 import { Svg as Component, Svgs as Svg } from '../../icon.svg';
 
 import type { TUser } from './types';
@@ -61,14 +65,26 @@ const _ImportAtTop = ({ data }: TImportAtTopProps & TUser) => {
 
 export const ImportAtTop = React.memo(_ImportAtTop);`;
 
-export const testComponentCodeImports = `import React, { useState, State, useEffect } from 'react';
+/* 
+* 💡 ru: 
+
+* 💡 en:  
+*/
+
+export const testComponentCodeImports: string = `import React, { useState, State, useEffect } from 'react';
 import type { TUser } from './types';
 import * as validator from './ZipCodeValidator';
 import { Svg as Component, Svgs as Svg } from '../../icon.svg';
 import './styles.css';
 `;
 
-export const testComponentCodeMain = `export type TImportAtTopProps = {
+/* 
+* 💡 ru: 
+
+* 💡 en:  
+*/
+
+export const testComponentCodeMain: string = `export type TImportAtTopProps = {
 	data: string,
 };
 
@@ -88,9 +104,13 @@ const _ImportAtTop = ({ data }: TImportAtTopProps & TUser) => {
 
 export const ImportAtTop = React.memo(_ImportAtTop);`;
 
-// -
+/* 
+* 💡 ru: 
 
-export const codeMain = `
+* 💡 en:  
+*/
+
+export const codeMain: string = `
 
 import React from 'react'
 
