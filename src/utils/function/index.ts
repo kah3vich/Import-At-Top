@@ -761,7 +761,7 @@ export const checkFormatFile = (vscode: any) => {
 	let result = false;
 
 	arrFormat.forEach((format: string) => {
-		if (currentlyOpenTabFilePath.slice(4).split('.')[1] === format) {
+		if (currentlyOpenTabFilePath.slice(-5).split('.')[1] === format) {
 			result = true;
 		}
 	});
