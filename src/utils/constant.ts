@@ -73,7 +73,6 @@ export const arrTriggerWordOther: string[] = [
 	'return ',
 	'true',
 	'false',
-	'@',
 	' = ',
 	' => ',
 	' == ',

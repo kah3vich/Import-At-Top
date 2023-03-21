@@ -2,11 +2,11 @@ import { consoleLog } from '../other';
 import { TImportElement } from '../types';
 
 import type {
-	TStatusBarInitProps,
-	TStatusBarErrorProps,
-	TStatusBarAcceptProps,
-	TStatusBarPendingProps,
 	TGetPartCodeProps,
+	TStatusBarAcceptProps,
+	TStatusBarErrorProps,
+	TStatusBarInitProps,
+	TStatusBarPendingProps,
 } from './types';
 
 //! - Function
@@ -37,6 +37,7 @@ export const getPartCode = ({
 		const arrCode: string[] = code.replace(/;/g, '').replace(/\n/g, ';').split(';');
 		const arrCodeMain: string[] = code.split('\n');
 		let activeImport: boolean = true;
+		let activePreCode: number | null = null;
 		let activeId: number = 0;
 
 		copyArray(arrCode).map((el: string, idArr: number) => {
@@ -45,6 +46,9 @@ export const getPartCode = ({
 					if (activeImport && el.includes(wordImport)) {
 						activeId = idArr + 1;
 						activeImport = true;
+						if (!activePreCode) {
+							activePreCode = idArr;
+						}
 					}
 					if (el.includes(wordOther)) {
 						activeImport = false;
@@ -53,10 +57,15 @@ export const getPartCode = ({
 			});
 		});
 
-		if (type === 'import') {
-			return arrCode.slice(0, activeId).filter((el: any) => el !== '');
+		if (type === 'precode') {
+			return arrCode.slice(0, activePreCode || 0).filter((el: any) => el !== '');
 		}
-		return arrCodeMain.slice(activeId).join('\n');
+		if (type === 'import') {
+			return arrCode.slice(activePreCode || 0, activeId).filter((el: any) => el !== '');
+		}
+		if (type === 'main') {
+			return arrCodeMain.slice(activeId).join('\n');
+		}
 	}
 };
 
@@ -70,7 +79,10 @@ export const removeDuplicates = (arr: any[], key: string) => {
 	const seen: any = {};
 	return arr.filter(item => {
 		const k = item[key];
-		return seen.hasOwnProperty(k) ? false : (seen[k] = true);
+		if (seen.hasOwnProperty(k)) {
+			return false;
+		}
+		return (seen[k] = true);
 	});
 };
 
@@ -88,6 +100,8 @@ export const convertImportInStringToObjectImports = (
 
 	const arrImport_: string[] = copyArray(arrImport);
 
+	console.log('✅ arrImport_    ', arrImport_);
+
 	arrImport_.forEach((elemImport: any) => {
 		predResult.push({
 			importDefault: [],
@@ -99,6 +113,8 @@ export const convertImportInStringToObjectImports = (
 			package: elemImport.replace('"', "'").match(/'(.*?)'/)[1],
 		});
 	});
+
+	console.log('✅ arrImport_    ', arrImport_);
 
 	const result = copyArray(removeDuplicates(predResult, 'package'));
 
@@ -719,7 +735,7 @@ export const removeEmptyAndStop = (array: any) => {
 * 💡 en:  
 */
 
-export const finallyCode = (arrImports: any, codeMain: any) => {
+export const finallyCode = (arrImports: any, codeMain: any, preCodeFile: any) => {
 	const result: any = sortImportsArray(
 		convertImportsArrObjectToArrStringImport(copyArray(arrImports)),
 	);
@@ -734,13 +750,35 @@ export const finallyCode = (arrImports: any, codeMain: any) => {
 		}
 	});
 
-	const r = `${[]
+	console.log('✅ preCodeFile    ', preCodeFile);
+
+	const preCodeMain = [...new Set(preCodeFile)]
+		.filter((el: any) => el !== '\r')
+		.map((el: any) => el.replace('\r', ''));
+
+	console.log('✅ preCodeMain    ', preCodeMain);
+
+	if (preCodeMain.length) {
+		const preCode =
+			preCodeMain.length > 1 ? `${preCodeMain.join(';\n')};\n\n` : `${preCodeMain};\n\n`;
+
+		console.log('✅ preCode    ', preCode);
+
+		return (
+			`${preCode}` +
+			`${[]
+				.concat(...result)
+				.map((el: any) => (el.includes(' from ') || el.includes("import '") ? `${el};` : el))
+
+				.join('\n')}\n${removeEmptyAndStop(codeMain.split('\n')).join('\n')}`
+		);
+	}
+
+	return `${[]
 		.concat(...result)
 		.map((el: any) => (el.includes(' from ') || el.includes("import '") ? `${el};` : el))
-		.join('\n')}\n${removeEmptyAndStop(codeMain.split('\n')).join('\n')}`;
-	console.log('✅ r    ', r);
 
-	return r;
+		.join('\n')}\n${removeEmptyAndStop(codeMain.split('\n')).join('\n')}`;
 };
 
 // Extension
@@ -777,7 +815,7 @@ export const checkFormatFile = (vscode: any) => {
 
 export const statusBarInit = ({ context, statusBar }: TStatusBarInitProps) => {
 	statusBar.command = 'import-at-top';
-	statusBar.name = '⌛ Import At Top';
+	statusBar.name = 'Import At Top';
 	statusBar.text = '⌛ Import At Top';
 	statusBar.backgroundColor = 'transparent';
 	context.subscriptions.push(statusBar);

@@ -27,6 +27,8 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 
 	const configApp: TConfigParams[] = copyArray(configExtension) || copyArray(baseConfig);
 
+	console.log('✅ configApp    ', configApp);
+
 	/* 
 	* 💡 ru: 
 
@@ -45,6 +47,8 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		.split('; ')
 		.filter((el: string) => el !== '');
 
+	console.log('✅ codeImportsFile    ', codeImportsFile);
+
 	/* 
 	* 💡 ru: 
 
@@ -58,6 +62,23 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		arrTriggerWordOther: arrTriggerWordOther,
 	});
 
+	console.log('✅ codeMainFile    ', codeMainFile);
+
+	/* 
+	* 💡 ru: 
+
+	* 💡 en:  
+	*/
+
+	const preCodeFile = getPartCode({
+		code: code,
+		type: 'precode',
+		arrTriggerWordImport: arrTriggerWordImport,
+		arrTriggerWordOther: arrTriggerWordOther,
+	}) || []
+
+	console.log('✅ preCodeFile    ', preCodeFile     
+);
 	/* 
 	* 💡 ru: 
 
@@ -65,6 +86,8 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 	*/
 
 	const arrImportsObject = convertImportInStringToObjectImports(codeImportsFile, arrOfSymbols);
+
+	console.log('✅ arrImportsObject    ', arrImportsObject);
 
 	/* 
 	* 💡 ru: 
@@ -78,6 +101,8 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		configApp,
 	);
 
+	console.log('✅ allArrayImports    ', allArrayImports);
+
 	/* 
 	* 💡 ru: 
 
@@ -86,13 +111,17 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 
 	const arrImportsResult = checkHaveImportInMainCode(codeMainFile, allArrayImports);
 
+	console.log('✅ arrImportsResult    ', arrImportsResult);
+
 	/* 
 	* 💡 ru: 
 
 	* 💡 en:  
 	*/
 
-	const result = finallyCode(arrImportsResult, codeMainFile);
+	const result = finallyCode(arrImportsResult, codeMainFile, preCodeFile);
+
+	console.log('✅ result    ', result);
 
 	return result;
 };

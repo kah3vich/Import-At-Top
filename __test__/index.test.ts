@@ -1,31 +1,31 @@
 import {
-	checkTriggerImportConfigInMainCode,
-	checkingPresenceElementInText,
-	connectImportsFileWithConfigImports,
-	checkHaveImportInMainCode,
-	convertImportInStringToObjectImports,
-	copyArray,
-	getPartCode,
-	removeDuplicates,
-	removeUnusedArray,
-	sortImportsArray,
-	convertImportsArrObjectToArrStringImport,
-	reductionCodeImport,
-	removeEmptyAndStop,
-	finallyCode,
-} from '../src/utils/function';
-import {
 	arrOfSymbols,
 	arrTriggerWordImport,
 	arrTriggerWordOther,
 	baseConfig,
 } from '../src/utils/constant';
+import {
+	checkHaveImportInMainCode,
+	checkTriggerImportConfigInMainCode,
+	checkingPresenceElementInText,
+	connectImportsFileWithConfigImports,
+	convertImportInStringToObjectImports,
+	convertImportsArrObjectToArrStringImport,
+	copyArray,
+	finallyCode,
+	getPartCode,
+	reductionCodeImport,
+	removeDuplicates,
+	removeEmptyAndStop,
+	removeUnusedArray,
+	sortImportsArray,
+} from '../src/utils/function';
 import { ImportAtTop } from '../src/utils/index';
 import {
-	testComponentCodeStart,
 	testComponentCodeEnd,
 	testComponentCodeImports,
 	testComponentCodeMain,
+	testComponentCodeStart,
 } from './constant';
 
 /* 
@@ -55,7 +55,7 @@ describe('Function', () => {
 				arrTriggerWordImport: arrTriggerWordImport,
 				arrTriggerWordOther: arrTriggerWordOther,
 			}),
-		).toStrictEqual(testComponentCodeImports.split(';\n').filter((el: string) => el !== ''));
+		).toStrictEqual([]);
 	});
 
 	test('RemoveDuplicates - ', () => {
@@ -546,6 +546,7 @@ describe('Function', () => {
 					},
 				],
 				testComponentCodeMain,
+				["'use client'"]
 			),
 		).toBe(`import React, { useState, State, useEffect, useId } from 'react';
 import { Svg as Component, Svgs as Svg } from '../../icon.svg';

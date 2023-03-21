@@ -21,7 +21,7 @@ export type TStatusBarPendingProps = {
 
 export type TGetPartCodeProps = {
 	code: string;
-	type: 'import' | 'main';
+	type: 'import' | 'main' | 'precode';
 	arrTriggerWordImport: string[];
 	arrTriggerWordOther: string[];
 };
