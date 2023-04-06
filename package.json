@@ -1,7 +1,7 @@
 {
 	"name": "import-at-top",
 	"publisher": "kah3vich",
-	"displayName": "Import At Top (React)",
+	"displayName": "Import At Top (JS)",
 	"description": "An extension that adds imports to the source file from the specified options in the configuration file, and also sorts and removes unnecessary imports, which improves and speeds up the user experience.",
 	"repository": {
 		"type": "git",
@@ -11,18 +11,8 @@
 	"engines": {
 		"vscode": "^1.60.0"
 	},
-	"extensionPack": [
-		"kah3vich.nanosnippets",
-		"kah3vich.nano-refactor",
-		"kah3vich.holdesher"
-	],
-	"categories": [
-		"Extension Packs",
-		"Other",
-		"Formatters",
-		"Linters",
-		"Debuggers"
-	],
+	"extensionPack": ["kah3vich.nanosnippets", "kah3vich.nano-refactor", "kah3vich.holdesher"],
+	"categories": ["Extension Packs", "Other", "Formatters", "Linters", "Debuggers"],
 	"preview": false,
 	"galleryBanner": {
 		"color": "#20232A",
@@ -39,9 +29,7 @@
 					"description": "✅ Config params - Import At Top",
 					"default": [
 						{
-							"importDefault": [
-								"React"
-							],
+							"importDefault": ["React"],
 							"importExport": [
 								"useState",
 								"useEffect",
@@ -59,10 +47,7 @@
 						},
 						{
 							"importDefault": [],
-							"importExport": [
-								"Get",
-								"Post"
-							],
+							"importExport": ["Get", "Post"],
 							"package": "@nestjs/common"
 						}
 					]
@@ -84,9 +69,7 @@
 			}
 		]
 	},
-	"activationEvents": [
-		"onCommand:import-at-top"
-	],
+	"activationEvents": ["onCommand:import-at-top"],
 	"icon": "assets/logo.png",
 	"license": "Import At Top License",
 	"author": {
