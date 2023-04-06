@@ -60,13 +60,6 @@
         </td>
         <td align="center" width="96">
             <a href="#">
-                <img src="https://raw.githubusercontent.com/kah3vich/kah3vich/main/assets/img/nextjs.png" width="78" height="48" alt="NextJS" />
-            </a>
-            <br />
-            <img src="https://svg-readme.vercel.app/readme/svg?type=span&content=NextJS" alt="NextJS" width="100%" height="23">
-        </td>
-        <td align="center" width="96">
-            <a href="#">
                 <img src="https://raw.githubusercontent.com/kah3vich/kah3vich/main/assets/img/nestjs.png" width="48" height="48" alt="NestJS" />
             </a>
             <br />

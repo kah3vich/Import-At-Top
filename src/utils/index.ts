@@ -11,28 +11,28 @@ import {
 import type { TConfigParams } from './types';
 
 /* 
-* 💡 ru: 
+* 💡 ru: Основная функция расширение.
 
-* 💡 en:  
+* 💡 en: Main function extension.
 */
 
 export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 	//| ✅ Variable
 
 	/* 
-	* 💡 ru: 
+	* 💡 ru: Переменная для конфига от пользователя или базовый расширения.
 
-	* 💡 en:  
+	* 💡 en: Variable for config from user or base extension.
 	*/
 
-	const configApp: TConfigParams[] = copyArray(configExtension) || copyArray(baseConfig);
+	const configApp: TConfigParams[] = copyArray(configExtension || baseConfig);
 
-	console.log('✅ configApp    ', configApp);
+	//| ✅ Main
 
 	/* 
-	* 💡 ru: 
+	* 💡 ru: Получаем часть кода, которая содержит только импорты.
 
-	* 💡 en:  
+	* 💡 en: We get a part of the code that contains only imports.
 	*/
 
 	const codeImportsFile = getPartCode({
@@ -47,12 +47,10 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		.split('; ')
 		.filter((el: string) => el !== '');
 
-	console.log('✅ codeImportsFile    ', codeImportsFile);
-
 	/* 
-	* 💡 ru: 
+	* 💡 ru: Получаем часть кода, которая содержит только основу.
 
-	* 💡 en:  
+	* 💡 en: We get a part of the code that contains only the base.
 	*/
 
 	const codeMainFile = getPartCode({
@@ -62,37 +60,18 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		arrTriggerWordOther: arrTriggerWordOther,
 	});
 
-	console.log('✅ codeMainFile    ', codeMainFile);
-
 	/* 
-	* 💡 ru: 
+	* 💡 ru: Получение массива с данными из импортов - их тип и пакет.
 
-	* 💡 en:  
-	*/
-
-	const preCodeFile = getPartCode({
-		code: code,
-		type: 'precode',
-		arrTriggerWordImport: arrTriggerWordImport,
-		arrTriggerWordOther: arrTriggerWordOther,
-	}) || []
-
-	console.log('✅ preCodeFile    ', preCodeFile     
-);
-	/* 
-	* 💡 ru: 
-
-	* 💡 en:  
+	* 💡 en: Getting an array with data from imports - their type and package.
 	*/
 
 	const arrImportsObject = convertImportInStringToObjectImports(codeImportsFile, arrOfSymbols);
 
-	console.log('✅ arrImportsObject    ', arrImportsObject);
-
 	/* 
-	* 💡 ru: 
+	* 💡 ru: Соединение массива с данными об импортах из файла, с кофигом.
 
-	* 💡 en:  
+	* 💡 en: Connecting an array with data about imports from a file, with a config.
 	*/
 
 	const allArrayImports = connectImportsFileWithConfigImports(
@@ -101,27 +80,21 @@ export const ImportAtTop = (code: string, configExtension: TConfigParams[]) => {
 		configApp,
 	);
 
-	console.log('✅ allArrayImports    ', allArrayImports);
-
 	/* 
-	* 💡 ru: 
+	* 💡 ru: Проверка на валидность импортов в массиве по отношение к основному коду файла.
 
-	* 💡 en:  
+	* 💡 en: Checking the validity of imports in the array in relation to the main code of the file.
 	*/
 
 	const arrImportsResult = checkHaveImportInMainCode(codeMainFile, allArrayImports);
 
-	console.log('✅ arrImportsResult    ', arrImportsResult);
-
 	/* 
-	* 💡 ru: 
+	* 💡 ru: Финальная сборка кода, в котором соединяют полученные импорты и основной код.
 
-	* 💡 en:  
+	* 💡 en: The final assembly of the code, in which the received imports and the main code are connected.
 	*/
 
-	const result = finallyCode(arrImportsResult, codeMainFile, preCodeFile);
-
-	console.log('✅ result    ', result);
+	const result = finallyCode(arrImportsResult, codeMainFile);
 
 	return result;
 };

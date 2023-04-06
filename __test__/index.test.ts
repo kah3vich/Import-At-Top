@@ -30,9 +30,9 @@ import {
 
 /* 
 
-* 💡 ru: 
+* 💡 ru: Тесты для функции расширения.
 
-* 💡 en: 
+* 💡 en: Tests for the extension function.
 
 */
 
@@ -43,7 +43,7 @@ describe('Import At Top', () => {
 });
 
 describe('Function', () => {
-	test('Copy- copy to avoid mutation', () => {
+	test('Copy - copy to avoid mutation', () => {
 		expect(copyArray([1, '2', 3])).toEqual([1, '2', 3]);
 	});
 
@@ -67,7 +67,7 @@ describe('Function', () => {
 		).toEqual([{ package: 'react' }, { package: 'redux' }]);
 	});
 
-	test('ConvertImportInStringToObjectImports -', () => {
+	test('ConvertImportInStringToObjectImports - ', () => {
 		expect(
 			convertImportInStringToObjectImports(
 				testComponentCodeImports.split(';\n').filter((el: string) => el !== ''),
@@ -281,13 +281,13 @@ describe('Function', () => {
 		expect(checkingPresenceElementInText(testComponentCodeMain, 'Component')).toBe('Component');
 	});
 
-	test('RemoveUnused-', () => {
+	test('RemoveUnused- ', () => {
 		expect(
 			removeUnusedArray(testComponentCodeMain, ['useState', 'Component', 'useEffects']),
 		).toEqual(['useState', 'Component']);
 	});
 
-	test('CheckHaveImportInMainCode -', () => {
+	test('CheckHaveImportInMainCode - ', () => {
 		expect(
 			checkHaveImportInMainCode(testComponentCodeMain, [
 				{
@@ -385,7 +385,7 @@ describe('Function', () => {
 		]);
 	});
 
-	test('ConvertImportsArrObjectToArrStringImport -', () => {
+	test('ConvertImportsArrObjectToArrStringImport - ', () => {
 		expect(
 			convertImportsArrObjectToArrStringImport([
 				{
@@ -443,7 +443,7 @@ describe('Function', () => {
 		]);
 	});
 
-	test('SortImportsArray -', () => {
+	test('SortImportsArray - ', () => {
 		expect(
 			sortImportsArray([
 				"import React, { useState, State, useEffect, useId } from 'react'",
@@ -465,7 +465,7 @@ describe('Function', () => {
 		]);
 	});
 
-	test('ReductionCodeImport -', () => {
+	test('ReductionCodeImport - ', () => {
 		expect(
 			reductionCodeImport([
 				"import { useState, State, useEffect, useId, useParams, useTest, useSpeed } from 'react'",
@@ -491,11 +491,11 @@ describe('Function', () => {
 		]);
 	});
 
-	test('RemoveEmptyAndStop -', () => {
+	test('RemoveEmptyAndStop - ', () => {
 		expect(removeEmptyAndStop(['', '', 'A', ''])).toEqual(['A', '']);
 	});
 
-	test('FinallyCode -', () => {
+	test('FinallyCode - ', () => {
 		expect(
 			finallyCode(
 				[
@@ -546,7 +546,6 @@ describe('Function', () => {
 					},
 				],
 				testComponentCodeMain,
-				["'use client'"]
 			),
 		).toBe(`import React, { useState, State, useEffect, useId } from 'react';
 import { Svg as Component, Svgs as Svg } from '../../icon.svg';

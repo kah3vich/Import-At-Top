@@ -12,16 +12,16 @@ import { TConfigParams } from './utils/types';
 import * as vscode from 'vscode';
 
 /* 
-* 💡 ru: 
+* 💡 ru: Активация расширения.
 
-* 💡 en:  
+* 💡 en: Extension activation.
 */
 
 export const activate = (context: vscode.ExtensionContext) => {
 	/* 
-	* 💡 ru: 
+	* 💡 ru: Создание статус бара для нижней панели.
 
-	* 💡 en:  
+	* 💡 en: Creating a status bar for the bottom bar.
 	*/
 
 	const statusBar: vscode.StatusBarItem = vscode.window.createStatusBarItem(
@@ -30,9 +30,9 @@ export const activate = (context: vscode.ExtensionContext) => {
 	);
 
 	/* 
-	* 💡 ru: 
+	* 💡 ru: Инициализация статус бара.
 
-	* 💡 en:  
+	* 💡 en: Initialization of the bar status.
 	*/
 
 	statusBarInit({
@@ -41,17 +41,18 @@ export const activate = (context: vscode.ExtensionContext) => {
 	});
 
 	/* 
-	* 💡 ru: 
+	* 💡 ru: Регистрация основной команды для расширение и внутрение флоу самого расширения.
 
-	* 💡 en:  
+	* 💡 en: Registration of the main command for the extension and the internal flow of the extension itself.
 	*/
 
 	const disposable = vscode.commands.registerCommand('import-at-top', () => {
 		/* 
-		* 💡 ru: 
+		* 💡 ru: Проверка на активацию редактора.
 
-		* 💡 en:  
+		* 💡 en: Checking for editor activation.
 		*/
+
 		const editor = vscode.window.activeTextEditor;
 
 		if (!editor) {
@@ -59,18 +60,18 @@ export const activate = (context: vscode.ExtensionContext) => {
 		}
 
 		/* 
-		* 💡 ru: 
+		* 💡 ru: Получение содержание текущего файла.
 
-		* 💡 en:  
+		* 💡 en: Get the contents of the current file.
 		*/
 
 		const document = editor.document;
 		const documentText = document.getText();
 
 		/* 
-		* 💡 ru: 
+		* 💡 ru: Получение конфига от пользователя из setting.json.
 
-		* 💡 en:  
+		* 💡 en: Getting config from user from setting.json.
 		*/
 
 		const configExtension: TConfigParams[] | undefined = vscode.workspace
@@ -78,9 +79,9 @@ export const activate = (context: vscode.ExtensionContext) => {
 			.get('config');
 
 		/* 
-		* 💡 ru: 
+		* 💡 ru: Проверка валидности пользовательского конфига для расширения.
 
-		* 💡 en:  
+		* 💡 en: Checking the validity of the user config for the extension.
 		*/
 
 		if (!checkArrayConfig(configExtension || [])) {
@@ -96,9 +97,9 @@ export const activate = (context: vscode.ExtensionContext) => {
 		}
 
 		/* 
-		* 💡 ru: 
+		* 💡 ru: Проверка текущего файла на валидность.
 
-		* 💡 en:  
+		* 💡 en: Checking the current file for validity.
 		*/
 
 		if (!checkFormatFile(vscode)) {
@@ -114,9 +115,9 @@ export const activate = (context: vscode.ExtensionContext) => {
 		}
 
 		/* 
-		* 💡 ru: 
+		* 💡 ru: Вызов главной функции для обработки всего кода из файла.
 
-		* 💡 en:  
+		* 💡 en: Calling the main function to process all the code in the file.
 		*/
 
 		try {
@@ -126,9 +127,9 @@ export const activate = (context: vscode.ExtensionContext) => {
 			statusBarPending({ statusBar });
 
 			/* 
-			* 💡 ru: 
+			* 💡 ru: Возвращение полученного результата из функции в текущей файл.
 
-			* 💡 en:  
+			* 💡 en: Returning the result from the function to the current file.
 			*/
 
 			editor.edit(editBuilder => {
@@ -148,9 +149,9 @@ export const activate = (context: vscode.ExtensionContext) => {
 };
 
 /* 
-* 💡 ru: 
+* 💡 ru: Деактивация расширения.
 
-* 💡 en:  
+* 💡 en: Deactivate the extension.
 */
 
 export const deactivate = () => {

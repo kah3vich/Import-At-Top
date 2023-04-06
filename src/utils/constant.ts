@@ -1,9 +1,9 @@
 import type { TConfigParams } from './types';
 
 /* 
-* 💡 ru: 
+* 💡 ru: Базовый конфиг для расширения.
 
-* 💡 en:  
+* 💡 en: Base config for extension.
 */
 
 export const baseConfig: TConfigParams[] = [
@@ -32,9 +32,9 @@ export const baseConfig: TConfigParams[] = [
 ];
 
 /* 
-* 💡 ru: 
+* 💡 ru: Массив с символами для проверки комбинаций ключевых слов.
 
-* 💡 en:  
+* 💡 en: Array with characters to test combinations of keywords.
 */
 
 export const arrOfSymbols: string[] = [
@@ -44,17 +44,17 @@ export const arrOfSymbols: string[] = [
 ];
 
 /* 
-* 💡 ru: 
+* 💡 ru: Массив для триггерных слов для определения части импорта.
 
-* 💡 en:  
+* 💡 en: An array for trigger words to define the part of the import.
 */
 
 export const arrTriggerWordImport: string[] = ['import ', ' from '];
 
 /* 
-* 💡 ru: 
+* 💡 ru: Массив для триггерных слов для определения основную.
 
-* 💡 en:  
+* 💡 en: An array for trigger words to define the main one.
 */
 
 export const arrTriggerWordOther: string[] = [

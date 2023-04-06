@@ -46,15 +46,15 @@
 
 <br />
 
-### RELEASE: v0.0.1-v0.0.34 - March 9, 2023
+### RELEASE: v0.0.1-v0.0.34 - April 7, 2023
 
 <br />
 
-> ### 📦 FEAT:
+> ### 📦 FEAT: The import processing flow and config parameters for users have been rewritten.
 >
-> ### 🐛 FIX:
+> ### 🐛 FIX: Fixed most of the bugs when parts of imports simply disappeared.
 >
-> ### 📖 DOC:
+> ### 📖 DOC: Design changes and extension descriptions.
 
 <br />
 

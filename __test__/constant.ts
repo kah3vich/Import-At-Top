@@ -1,7 +1,7 @@
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const testComponentCodeStart: string = `import React, { useState, State, useEffect } from 'react';
@@ -33,7 +33,7 @@ export const ImportAtTop = React.memo(_ImportAtTop);`;
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const testComponentCodeEnd: string = `import React, { useState, State, useEffect, useId } from 'react';
@@ -68,7 +68,7 @@ export const ImportAtTop = React.memo(_ImportAtTop);`;
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const testComponentCodeImports: string = `import React, { useState, State, useEffect } from 'react';
@@ -81,7 +81,7 @@ import './styles.css';
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const testComponentCodeMain: string = `export type TImportAtTopProps = {
@@ -107,7 +107,7 @@ export const ImportAtTop = React.memo(_ImportAtTop);`;
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const codeMain: string = `

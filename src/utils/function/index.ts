@@ -2,19 +2,18 @@ import { consoleLog } from '../other';
 import { TImportElement } from '../types';
 
 import type {
-	TGetPartCodeProps,
 	TStatusBarAcceptProps,
 	TStatusBarErrorProps,
 	TStatusBarInitProps,
 	TStatusBarPendingProps,
 } from './types';
 
-//! - Function
+//| ✅ Main
 
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const copyArray = (arr: any[]) => {
@@ -24,7 +23,7 @@ export const copyArray = (arr: any[]) => {
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const getPartCode = ({
@@ -32,12 +31,16 @@ export const getPartCode = ({
 	type,
 	arrTriggerWordImport,
 	arrTriggerWordOther,
-}: TGetPartCodeProps): any => {
+}: {
+	code: string;
+	type: 'import' | 'main';
+	arrTriggerWordImport: string[];
+	arrTriggerWordOther: string[];
+}): any => {
 	if (code.includes('\n')) {
 		const arrCode: string[] = code.replace(/;/g, '').replace(/\n/g, ';').split(';');
 		const arrCodeMain: string[] = code.split('\n');
 		let activeImport: boolean = true;
-		let activePreCode: number | null = null;
 		let activeId: number = 0;
 
 		copyArray(arrCode).map((el: string, idArr: number) => {
@@ -46,9 +49,6 @@ export const getPartCode = ({
 					if (activeImport && el.includes(wordImport)) {
 						activeId = idArr + 1;
 						activeImport = true;
-						if (!activePreCode) {
-							activePreCode = idArr;
-						}
 					}
 					if (el.includes(wordOther)) {
 						activeImport = false;
@@ -57,22 +57,17 @@ export const getPartCode = ({
 			});
 		});
 
-		if (type === 'precode') {
-			return arrCode.slice(0, activePreCode || 0).filter((el: any) => el !== '');
-		}
 		if (type === 'import') {
-			return arrCode.slice(activePreCode || 0, activeId).filter((el: any) => el !== '');
+			return arrCode.slice(0, activeId).filter((el: any) => el !== '');
 		}
-		if (type === 'main') {
-			return arrCodeMain.slice(activeId).join('\n');
-		}
+		return arrCodeMain.slice(activeId).join('\n');
 	}
 };
 
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const removeDuplicates = (arr: any[], key: string) => {
@@ -89,7 +84,7 @@ export const removeDuplicates = (arr: any[], key: string) => {
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const convertImportInStringToObjectImports = (
@@ -99,8 +94,6 @@ export const convertImportInStringToObjectImports = (
 	const predResult: TImportElement[] = [];
 
 	const arrImport_: string[] = copyArray(arrImport);
-
-	console.log('✅ arrImport_    ', arrImport_);
 
 	arrImport_.forEach((elemImport: any) => {
 		predResult.push({
@@ -113,8 +106,6 @@ export const convertImportInStringToObjectImports = (
 			package: elemImport.replace('"', "'").match(/'(.*?)'/)[1],
 		});
 	});
-
-	console.log('✅ arrImport_    ', arrImport_);
 
 	const result = copyArray(removeDuplicates(predResult, 'package'));
 
@@ -320,7 +311,7 @@ export const convertImportInStringToObjectImports = (
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const checkTriggerImportConfigInMainCode = (importsFile: any, arrConfig: any) => {
@@ -361,7 +352,7 @@ export const checkTriggerImportConfigInMainCode = (importsFile: any, arrConfig: 
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const connectImportsFileWithConfigImports = (
@@ -402,7 +393,7 @@ export const connectImportsFileWithConfigImports = (
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const checkingPresenceElementInText = (text: any, word: any) => {
@@ -451,7 +442,7 @@ export const checkingPresenceElementInText = (text: any, word: any) => {
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const removeUnusedArray = (text: any, triggerArr: any) => {
@@ -472,9 +463,6 @@ export const removeUnusedArray = (text: any, triggerArr: any) => {
 		const arrLeft_ = [...arrRight, ...arrLeft];
 
 		arrLeft_.forEach(el => {
-			// console.log('✅ `${el}${_word}`    ', `${el}${_word}`);
-			// console.log('✅ result.includes(`${el}${_word}`)    ', elem.includes(`${el}${_word}`));
-
 			if (elem.includes(`${el}${_word}`)) {
 				active = false;
 			}
@@ -516,7 +504,7 @@ export const removeUnusedArray = (text: any, triggerArr: any) => {
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const checkHaveImportInMainCode = (codeMain: any, arrImports: any) => {
@@ -550,7 +538,7 @@ export const checkHaveImportInMainCode = (codeMain: any, arrImports: any) => {
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const convertImportsArrObjectToArrStringImport = (arrImports: any[]) => {
@@ -593,13 +581,12 @@ export const convertImportsArrObjectToArrStringImport = (arrImports: any[]) => {
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const sortImportsArray = (arrImports: any) => {
 	const result = [];
 	let count = 0;
-	// console.log('✅ arrImports    ', arrImports);
 
 	copyArray(arrImports).forEach((elemImport: any) => {
 		if (
@@ -679,7 +666,7 @@ export const sortImportsArray = (arrImports: any) => {
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const reductionCodeImport = (text: any) => {
@@ -712,7 +699,7 @@ export const reductionCodeImport = (text: any) => {
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const removeEmptyAndStop = (array: any) => {
@@ -732,10 +719,10 @@ export const removeEmptyAndStop = (array: any) => {
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
-export const finallyCode = (arrImports: any, codeMain: any, preCodeFile: any) => {
+export const finallyCode = (arrImports: any, codeMain: any) => {
 	const result: any = sortImportsArray(
 		convertImportsArrObjectToArrStringImport(copyArray(arrImports)),
 	);
@@ -750,43 +737,18 @@ export const finallyCode = (arrImports: any, codeMain: any, preCodeFile: any) =>
 		}
 	});
 
-	console.log('✅ preCodeFile    ', preCodeFile);
-
-	const preCodeMain = [...new Set(preCodeFile)]
-		.filter((el: any) => el !== '\r')
-		.map((el: any) => el.replace('\r', ''));
-
-	console.log('✅ preCodeMain    ', preCodeMain);
-
-	if (preCodeMain.length) {
-		const preCode =
-			preCodeMain.length > 1 ? `${preCodeMain.join(';\n')};\n\n` : `${preCodeMain};\n\n`;
-
-		console.log('✅ preCode    ', preCode);
-
-		return (
-			`${preCode}` +
-			`${[]
-				.concat(...result)
-				.map((el: any) => (el.includes(' from ') || el.includes("import '") ? `${el};` : el))
-
-				.join('\n')}\n${removeEmptyAndStop(codeMain.split('\n')).join('\n')}`
-		);
-	}
-
 	return `${[]
 		.concat(...result)
 		.map((el: any) => (el.includes(' from ') || el.includes("import '") ? `${el};` : el))
-
 		.join('\n')}\n${removeEmptyAndStop(codeMain.split('\n')).join('\n')}`;
 };
 
-// Extension
+//| ✅ Extension
 
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const checkFormatFile = (vscode: any) => {
@@ -810,7 +772,7 @@ export const checkFormatFile = (vscode: any) => {
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const statusBarInit = ({ context, statusBar }: TStatusBarInitProps) => {
@@ -825,26 +787,32 @@ export const statusBarInit = ({ context, statusBar }: TStatusBarInitProps) => {
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const statusBarError = ({ vscode, statusBar, message }: TStatusBarErrorProps) => {
 	vscode.window.showInformationMessage(`❌ Import At Top: ${message}`);
 	statusBar.text = '❌ Import At Top';
 	statusBar.backgroundColor = 'red';
-	consoleLog(`- Import At Top ${message}`, 'err');
+	consoleLog({
+		text: `- Import At Top ${message}`,
+		type: 'err',
+	});
 };
 
 export const statusBarAccept = ({ statusBar }: TStatusBarAcceptProps) => {
 	statusBar.text = '✅ Import At Top';
 	statusBar.backgroundColor = 'green';
-	consoleLog(`- Import At Top`, 'log');
+	consoleLog({
+		text: `- Import At Top`,
+		type: 'log',
+	});
 };
 
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const statusBarPending = ({ statusBar }: TStatusBarPendingProps) => {
@@ -857,7 +825,7 @@ export const statusBarPending = ({ statusBar }: TStatusBarPendingProps) => {
 /* 
 * 💡 ru: 
 
-* 💡 en:  
+* 💡 en: 
 */
 
 export const checkArrayConfig = (arr: any[]) => {

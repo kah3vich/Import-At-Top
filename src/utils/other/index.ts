@@ -1,16 +1,24 @@
+import { TConsoleLogProps } from './types';
+
 /* 
 
-* 💡 ru: 
+* 💡 ru: Вывод данные - обычный и консольный со стилизацией.
 
-* 💡 en: 
+* 💡 en: Data output - normal and console styled.
 
 */
 
-export const consoleLog = (str: string, type: 'log' | 'err') => {
+export const consoleLog = ({ text, type }: TConsoleLogProps) => {
 	if (type === 'log') {
-		console.log(`✅ ${str}`);
-		return `✅ ${str}`;
+		console.log(`✅ ${text}`);
+		return `✅ ${text}`;
 	}
-	console.error(`❌ ${str}`);
-	return `❌ ${str}`;
+
+	if (type === 'err') {
+		console.error(`❌ ${text}`);
+		return `❌ ${text}`;
+	}
+
+	console.log(text);
+	return text;
 };
