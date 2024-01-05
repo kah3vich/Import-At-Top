@@ -16,16 +16,16 @@
 
 <p align="center">
     <a href="https://marketplace.visualstudio.com/items?itemName=kah3vich.import-at-top">
-        <img src="https://vsmarketplacebadges.dev/version-short/kah3vich.import-at-top.svg?style=for-the-badge&colorA=252526&colorB=43A047&label=VERSION" alt="Version">
+        <img src="https://vsmarketplacebadges.dev/version-short/kah3vich.import-at-top.svg?style=for-the-badge&colorA=20232A&colorB=61dafb&label=VERSION" alt="Version">
     </a>&nbsp;
     <a href="https://marketplace.visualstudio.com/items?itemName=kah3vich.import-at-top">
-        <img src="https://vsmarketplacebadges.dev/rating-short/kah3vich.import-at-top.svg?style=for-the-badge&colorA=252526&colorB=43A047&label=Rating" alt="Rating">
+        <img src="https://vsmarketplacebadges.dev/rating-short/kah3vich.import-at-top.svg?style=for-the-badge&colorA=20232A&colorB=61dafb&label=Rating" alt="Rating">
     </a>&nbsp;
     <a href="https://marketplace.visualstudio.com/items?itemName=kah3vich.import-at-top">
-        <img src="https://vsmarketplacebadges.dev/installs-short/kah3vich.import-at-top.svg?style=for-the-badge&colorA=252526&colorB=43A047&label=Installs" alt="Installs">
+        <img src="https://vsmarketplacebadges.dev/installs-short/kah3vich.import-at-top.svg?style=for-the-badge&colorA=20232A&colorB=61dafb&label=Installs" alt="Installs">
     </a>&nbsp;
     <a href="https://marketplace.visualstudio.com/items?itemName=kah3vich.import-at-top">
-        <img src="https://vsmarketplacebadges.dev/downloads-short/kah3vich.import-at-top.svg?style=for-the-badge&colorA=252526&colorB=43A047&label=Downloads" alt="Downloads">
+        <img src="https://vsmarketplacebadges.dev/downloads-short/kah3vich.import-at-top.svg?style=for-the-badge&colorA=20232A&colorB=61dafb&label=Downloads" alt="Downloads">
     </a>
 </p>
 
