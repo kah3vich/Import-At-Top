@@ -7,15 +7,10 @@
 		"type": "git",
 		"url": "https://github.com/kah3vich/Import-At-Top"
 	},
-	"version": "0.0.34",
+	"version": "0.0.35",
 	"engines": {
 		"vscode": "^1.60.0"
 	},
-	"extensionPack": [
-		"kah3vich.nanosnippets",
-		"kah3vich.refactor",
-		"kah3vich.holdesher"
-	],
 	"categories": [
 		"Extension Packs",
 		"Other",
